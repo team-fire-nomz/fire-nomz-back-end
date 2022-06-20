@@ -3,12 +3,15 @@ from djoser.views import UserViewSet as DjoserUserViewSet
 from django.db.models import Count
 from api.models import User, Recipe, Test
 from rest_framework.viewsets import ModelViewSet
-from api.serializers import TestSerializer, RecipeSerializer, UserCreateSerializer, UserSerializer
+from rest_framework.generics import UpdateAPIView
+from api.serializers import TestSerializer, RecipeSerializer, UserCreateSerializer, UserSerializer, FeedbackTestSerializer
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 class UserViewSet(DjoserUserViewSet):
     queryset            = User.objects.all()
     serializer_class    = UserSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -22,6 +25,7 @@ class UserViewSet(DjoserUserViewSet):
 class RecipeViewSet(ModelViewSet):
     queryset          = Recipe.objects.all()
     serializer_class  = RecipeSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
         search_term = self.request.query_params.get("search")
@@ -55,7 +59,28 @@ class TestViewSet(ModelViewSet):
     queryset            = Test.objects.all().order_by('created_at')
     serializer_class    = TestSerializer
     #permission class for authenticated users?
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
+
+    def perform_create(self, serializer):
+        serializer.save(chef=self.request.user)
+
+    def perform_destroy(self, instance):
+        if self.request.user  == instance.chef:
+            instance.delete()
+
+    def perform_update(self,serializer):
+        if self.request.user == serializer.instance.chef:
+            serializer.save()
+
+class FeedbackTestView(ModelViewSet):
+    queryset = Test.objects.all()
+    serializer_class = FeedbackTestSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def get_queryset(self):
+        queryset = self.queryset
+        return queryset.filter(pk=self.kwargs['pk'])[0]
 
     def perform_create(self, serializer):
         serializer.save(chef=self.request.user)

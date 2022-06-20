@@ -2,7 +2,7 @@ from dataclasses import fields
 from rest_framework import serializers
 from djoser.serializers import UserSerializer as DjoserUserSerializer
 from djoser.serializers import UserCreateSerializer as DjoserUserCreateSerializer
-from .models import Test, User, Recipe
+from .models import Test, User, Recipe, TesterFeedback
 
 
 class UserSerializer(DjoserUserSerializer):
@@ -72,4 +72,19 @@ class TestSerializer(serializers.ModelSerializer):
             'variation_complete',
             'created_at',
             'successful_variation',
+        ]
+
+class FeedbackTestSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TesterFeedback
+        fields = [
+            'rating',
+            'saltiness',
+            'sweetness',
+            'portion',
+            'texture',
+            'additonal_comment',
+            'created_at',
+            'tester',
         ]

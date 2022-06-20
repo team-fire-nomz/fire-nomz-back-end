@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django import forms
 
 class User(AbstractUser):
     location = models.CharField(max_length=100, blank=True, null=True)
@@ -46,3 +47,46 @@ class Test(models.Model):
 
     def __str__(self):
         return f"{self.title}: Test #{self.version_number} "
+
+
+class TesterFeedback(models.Model):
+    ONE = '1' 
+    TWO = '2'
+    THREE = '3'
+    FOUR = '4'
+    FIVE = '5'
+
+    RADIO = [ 
+        (ONE , '1'), 
+        (TWO , '2'), 
+        (THREE , '3'), 
+        (FOUR , '4'), 
+        (FIVE , '5'), 
+        ]
+
+    TOO_LITTLE = 'Too Little'
+    JUST_RIGHT = 'Just Right'
+    TOO_MUCH = 'Too Much'
+
+    SCALE = [ 
+        (TOO_LITTLE , 'Too Little'), 
+        (JUST_RIGHT , 'Just Right'),
+        (TOO_MUCH , 'Too Much'), 
+        ]
+    
+    YES = 'Yes'
+    NO = 'No'
+
+    CHOICE = [ 
+        (YES , 'Yes'), 
+        (NO , 'No'), 
+        ]
+    
+    # rating = models.CharField(max_length=6, choices=RADIO, default=THREE, widget=forms.RadioSelect)
+    saltiness = models.CharField(max_length= 11, choices=SCALE, default='JUST RIGHT',)
+    sweetness = models.CharField(max_length= 11, choices=SCALE, default='JUST RIGHT',)
+    portion = models.CharField(max_length= 11, choices=SCALE, default='JUST RIGHT',)
+    texture = models.CharField(max_length= 5, choices=CHOICE, default='YES',)
+    additonal_comment = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    tester = models.ForeignKey('User', on_delete=models.CASCADE, related_name='feedback', max_length = 255)

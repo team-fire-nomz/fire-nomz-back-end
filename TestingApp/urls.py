@@ -24,6 +24,7 @@ router = DefaultRouter()
 router.register('recipes',api_views.RecipeViewSet)
 router.register('users',api_views.UserViewSet, 'users')
 router.register('recipes/(?P<recipe_pk>[^/.]+)/tests', api_views.TestViewSet)
+router.register('recipes/(?P<recipe_pk>[^/.]+)/tests/(?P<test_pk>[^/.]+)/feedback', api_views.FeedbackTestView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,5 +33,6 @@ urlpatterns = [
     path('auth/', include('djoser.urls.jwt')),
     path('auth/', include('djoser.urls.authtoken')),
     path('api/', include(router.urls)),
-    # path('api/recipes/<int:recipe_pk>/tests/<int:test_pk>/feedback/', api_views.AnswerListCreateView.as_view(),    name="recipe_feedback",),
+    
+    
 ]

@@ -1,8 +1,9 @@
 from dataclasses import fields
+from tkinter import Scale
 from rest_framework import serializers
 from djoser.serializers import UserSerializer as DjoserUserSerializer
 from djoser.serializers import UserCreateSerializer as DjoserUserCreateSerializer
-from .models import Test, User, Recipe, TesterFeedback
+from .models import Test, User, Recipe, TasterFeedback
 
 
 class UserSerializer(DjoserUserSerializer):
@@ -74,17 +75,54 @@ class TestSerializer(serializers.ModelSerializer):
             'successful_variation',
         ]
 
-class FeedbackTestSerializer(serializers.ModelSerializer):
+# class FeedBackTest(object):
+#     def __init__(self, saltiness, sweetness, portion, texture):
+#         self.saltiness = saltiness
+#         self.sweetness = sweetness
+#         self.portion = portion
+#         self.texture = texture
+
+#     RADIO = ( 
+#         ('ONE' , '1'), 
+#         ('TWO' , '2'), 
+#         ('THREE' , '3'), 
+#         ('FOUR' , '4'), 
+#         ('FIVE' , '5'), 
+#     )
+
+#     SCALE = ( 
+#         ('TOO_LITTLE' , 'Too Little'), 
+#         ('JUST_RIGHT' , 'Just Right'),
+#         ('TOO_MUCH' , 'Too Much'), 
+#     )
+
+#     CHOICE = ( 
+#         ('YES' , 'Yes'), 
+#         ('NO' , 'No'), 
+#     )
+
+
+
+class TasterFeedbackSerializer(serializers.ModelSerializer):
+    tester = serializers.SlugRelatedField(read_only=True, slug_field="username")
+
+    rating = serializers.MultipleChoiceField(choices = TasterFeedback.RADIO)
+    saltiness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
+    sweetness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
+    portion = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
+    texture = serializers.MultipleChoiceField(choices = TasterFeedback.CHOICE)
+
 
     class Meta:
-        model = TesterFeedback
+        model = TasterFeedback
         fields = [
+            'id',
+            'version_number',
             'rating',
             'saltiness',
             'sweetness',
             'portion',
             'texture',
-            'additonal_comment',
+            'additional_comment',
             'created_at',
-            'tester',
         ]

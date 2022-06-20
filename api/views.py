@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from djoser.views import UserViewSet as DjoserUserViewSet
 from django.db.models import Count
-from api.models import User, Recipe, Test
+from api.models import User, Recipe, Test, TasterFeedback
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import UpdateAPIView
-from api.serializers import TestSerializer, RecipeSerializer, UserCreateSerializer, UserSerializer, FeedbackTestSerializer
+from api.serializers import TestSerializer, RecipeSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
@@ -73,22 +73,18 @@ class TestViewSet(ModelViewSet):
         if self.request.user == serializer.instance.chef:
             serializer.save()
 
-class FeedbackTestView(ModelViewSet):
-    queryset = Test.objects.all()
-    serializer_class = FeedbackTestSerializer
+class TasterFeedbackView(ModelViewSet):
+    queryset = TasterFeedback.objects.all()
+    serializer_class = TasterFeedbackSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
-    def get_queryset(self):
-        queryset = self.queryset
-        return queryset.filter(pk=self.kwargs['pk'])[0]
-
     def perform_create(self, serializer):
-        serializer.save(chef=self.request.user)
+        serializer.save(tester=self.request.user)
 
     def perform_destroy(self, instance):
-        if self.request.user  == instance.chef:
+        if self.request.user  == instance.tester:
             instance.delete()
 
     def perform_update(self,serializer):
-        if self.request.user == serializer.instance.chef:
+        if self.request.user == serializer.instance.tester:
             serializer.save()

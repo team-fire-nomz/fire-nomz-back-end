@@ -24,7 +24,7 @@ router = DefaultRouter()
 router.register('recipes',api_views.RecipeViewSet)
 router.register('users',api_views.UserViewSet, 'users')
 router.register('recipes/(?P<recipe_pk>[^/.]+)/tests', api_views.TestViewSet)
-router.register('recipes/(?P<recipe_pk>[^/.]+)/tests/(?P<test_pk>[^/.]+)/feedback', api_views.FeedbackTestView)
+router.register('recipes/(?P<recipe_pk>[^/.]+)/tests/(?P<test_pk>[^/.]+)/feedback', api_views.TasterFeedbackView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

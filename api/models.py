@@ -5,8 +5,6 @@ class User(AbstractUser):
     location = models.CharField(max_length=100, blank=True, null=True)
     business_name = models.CharField(max_length=200, blank=True, null=True)
     
-
-
     def __repr__(self):
         return f"<User username={self.username} pk={self.pk}>"
 
@@ -14,35 +12,82 @@ class User(AbstractUser):
         return self.username
 
 
-class Recipe(models.Model):
+class RecipeVersion(models.Model):
     title = models.CharField(max_length=255)
-    recipe = models.TextField()
+    version_number = models.CharField(max_length=3)
     ingredients = models.TextField()
-    chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='chef', max_length=255) 
-    recipe_complete = models.BooleanField(default=False)
+    recipe_steps = models.TextField()
+    image = models.ImageField(blank=True, null=True)
+    ready_for_feedback = models.BooleanField(default=False)
+    successful_variation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255)
+    
     def __str__(self):
         return f"{self.title} by {self.chef}"
 
 
-class Test(models.Model):
-    base_recipe = models.ForeignKey('Recipe', on_delete=models.CASCADE, related_name='tests', max_length = 255)
-#temporarily set to charfield in order to research how to sequential number entries
-    version_number = models.CharField(max_length=3)
-    ingredients = models.TextField(max_length=500)
-    recipe = models.TextField(max_length=800)  
-    image = models.ImageField(blank=True, null=True)
-    outside_notes = models.CharField(max_length=400, blank=True, null=True)
-    final_notes = models.CharField(max_length=400, blank=True, null=True)
-    adjustments = models.CharField(max_length=455, blank=True, null=True)
-    feedback_link = models.URLField(max_length=255, )
-#temporarily set to CharField, researching how to connect with tags component from react FE repo
-    tags = models.CharField(max_length=255, blank=True, null=True)
-    chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='test', max_length = 255)
-    variation_complete = models.BooleanField(default=False)
+class Note(models.Model):
+    note = models.TextField(blank=True, null=True)
+    recipe_version = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='notes', max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
-    successful_variation = models.BooleanField(default=False)
+    note_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='notes')
 
     def __str__(self):
-        return f"{self.base_recipe}: Test #{self.version_number} "
+        return f"{self.recipe_version} by {self.note_by}"
+
+
+class Tag(models.Model):
+    tag = models.CharField(max_length=255, blank=True, null=True)
+    recipe_version_tag = models.ManyToManyField('RecipeVersion', related_name='tags')
+    note_tag = models.ManyToManyField('Note', related_name='tags')
+
+    def __str__(self):
+        return f"Tag: {self.tag}"
+
+
+class TasterFeedback(models.Model):
+    ONE = '1' 
+    TWO = '2'
+    THREE = '3'
+    FOUR = '4'
+    FIVE = '5'
+
+    RADIO = [ 
+        (ONE , '1'), 
+        (TWO , '2'), 
+        (THREE , '3'), 
+        (FOUR , '4'), 
+        (FIVE , '5'), 
+        ]
+
+    TOO_LITTLE = 'Too Little'
+    JUST_RIGHT = 'Just Right'
+    TOO_MUCH = 'Too Much'
+
+    SCALE = [ 
+        (TOO_LITTLE , 'Too Little'), 
+        (JUST_RIGHT , 'Just Right'),
+        (TOO_MUCH , 'Too Much'), 
+        ]
+    
+    YES = 'Yes'
+    NO = 'No'
+
+    CHOICE = [ 
+        (YES , 'Yes'), 
+        (NO , 'No'), 
+        ]
+    
+    rating = models.CharField(max_length=6, choices=RADIO, default=THREE,)
+    saltiness = models.CharField(max_length= 11, choices=SCALE, default=JUST_RIGHT,)
+    sweetness = models.CharField(max_length= 11, choices=SCALE, default=JUST_RIGHT,)
+    portion = models.CharField(max_length= 11, choices=SCALE, default=JUST_RIGHT,)
+    texture = models.CharField(max_length= 5, choices=CHOICE, default=YES,)
+    additional_comment = models.CharField(max_length=200,blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    test_recipe = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='taster_feedbacks', max_length = 255)
+    tester = models.ForeignKey('User', on_delete=models.CASCADE, related_name='taster_feedbacks', max_length=50)
+
+    def __str__(self):
+        return f"Feedback for {self.test_recipe}"

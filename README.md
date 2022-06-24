@@ -405,7 +405,7 @@ Requirement: user must be logged in.
 Required in URL: recipe's id.
 
 ```json
-DELETE /recipe/id/
+DELETE /recipes/id/
 ```
 
 ### Response
@@ -419,14 +419,16 @@ A successful deletion returns:
 If another logged in user attempts to delete a recipe that is not theirs:
 ```json
 404 Not Found
+
 {
-	"detail": "Not found."
+	"detail": "Editing posts is restricted to the author only."
 }
 ```
 
-If anonymous / guest attempts to delete a question:
+If anonymous / guest attempts to delete a recipe:
 ```json
 401 Unauthorized
+
 {
 	"detail": "Authentication credentials were not provided."
 }
@@ -439,7 +441,7 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: recipe_version *this MUST match the recipes/id or it will post to another recipe's id (likely bug?)*
+Required fields: recipe_version -> This number MUST match the recipes/id or it will post to another recipe's id (possible bug?)
 
 Optional fields: note 
 
@@ -481,6 +483,34 @@ GET /recipes/id/notes/
 200 OK
 
 [
+	{
+		"id": 6,
+		"note": "Yummish!",
+		"note_by": "Eric",
+		"recipe_version": 1,
+		"created_at": "06/23/2022 23:20"
+	},
+	{
+		"id": 5,
+		"note": "The best!",
+		"note_by": "Eric",
+		"recipe_version": 1,
+		"created_at": "06/23/2022 23:20"
+	},
+	{
+		"id": 4,
+		"note": "Nom nomz",
+		"note_by": "Eric",
+		"recipe_version": 1,
+		"created_at": "06/23/2022 23:19"
+	},
+	{
+		"id": 2,
+		"note": "Love this recipe.",
+		"note_by": "Eric",
+		"recipe_version": 1,
+		"created_at": "06/23/2022 23:03"
+	},
 	{
 		"id": 1,
 		"note": "Chezsteak so nomz!",
@@ -537,7 +567,7 @@ Requirement: user must be logged in.
 Required fields: recipe_version and note*
 
 ```json
-PUT /recipes/id/notes/id
+PUT /recipes/id/notes/id/
 
 {
 	"recipe_version": 1,
@@ -551,17 +581,18 @@ PUT /recipes/id/notes/id
 200 OK
 
 {
-	"id": 1,
-	"note": "Chezsteak so nomz!!",
+	"id": 2,
+	"note": "Love this recipe.. DELISH!!",
 	"note_by": "Eric",
 	"recipe_version": 1,
-	"created_at": "06/23/2022 23:01"
+	"created_at": "06/23/2022 23:03"
 }
 ```
 
 If another user attempts to edit the original user's note:
 ```json
 403 Forbidden
+
 {
 	"detail": "Editing posts is restricted to the author only."
 }
@@ -577,7 +608,7 @@ Requirement: user must be logged in.
 Required fields: recipe_version and/or note*
 
 ```json
-PATCH /recipes/id/notes/id
+PATCH /recipes/id/notes/id/
 
 {
 	"recipe_version": 1,
@@ -589,43 +620,51 @@ PATCH /recipes/id/notes/id
 
 ```json
 200 OK
+
 {
-	"id": 1,
+	"id": 6,
 	"note": "SOO GOOD!!",
 	"note_by": "Eric",
 	"recipe_version": 1,
-	"created_at": "06/23/2022 23:06"
+	"created_at": "06/23/2022 23:20"
 }
 ```
 
+
 ## Delete a specific note of a recipe
 
-Requirement: user must be logged in.
+Requirement: user must be logged in. 
 
 ### Request
 
+Required in URL: recipe and note ids.
+
 ```json
-DELETE /recipes/id/notes/id
-
-{
-
-}
+DELETE /recipes/id/notes/id/
 ```
 
 ### Response
 
+A successful deletion returns:
+
 ```json
 204 No Content
+```
+
+If another logged in user attempts to delete a note that is not theirs:
+```json
+404 Not Found
 
 {
-
+	"detail": "Editing posts is restricted to the author only."
 }
 ```
 
-If another user attempts to delete the original user's note:
+If anonymous / guest attempts to delete a note:
 ```json
-403 Forbidden
+401 Unauthorized
+
 {
-	"detail": "Editing posts is restricted to the author only."
+	"detail": "Authentication credentials were not provided."
 }
 ```

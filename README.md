@@ -39,8 +39,8 @@ Optional fields: email, first_name, last_name, date_joined, location and busines
 POST /users/
 
 {
-  "username": "Eric",
-  "password": "Momentum1"
+	"username": "Eric",
+	"password": "Momentum1"
 }
 ```
 
@@ -75,8 +75,8 @@ Required fields: username, password
 POST auth/token/login/
 
 {
-    "username": "Eric",
-    "password": "Momentum1"
+	"username": "Eric",
+	"password": "Momentum1"
 }
 ```
 
@@ -169,6 +169,8 @@ GET /recipes/
 ## Search recipes
 
 Search through recipes.
+
+Requirement: user must be logged in.
 
 ### Request
 
@@ -525,6 +527,8 @@ GET /recipes/id/notes/
 ## Search notes
 
 Search through notes.
+
+Requirement: user must be logged in.
 
 ### Request
 

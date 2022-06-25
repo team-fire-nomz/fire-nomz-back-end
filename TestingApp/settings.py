@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'api',
     'rest_framework',
     'rest_framework.authtoken',
+    'taggit',
     'djoser',
 ]
 
@@ -175,3 +176,6 @@ SERIALIZERS = [
                     'user': 'fire-nomz-back-end.TestingApp.serializers.UserCreateSerializer',
 }
 ]
+
+# For Taggit
+TAGGIT_CASE_INSENSITIVE = True

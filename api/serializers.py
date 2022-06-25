@@ -39,6 +39,7 @@ class UserCreateSerializer(DjoserUserCreateSerializer):
 class RecipeVersionSerializer(TaggitSerializer, serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
     notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
+    #for taggit
     tags = TagListSerializerField()
 
     class Meta:
@@ -59,8 +60,10 @@ class RecipeVersionSerializer(TaggitSerializer, serializers.ModelSerializer):
             ]
 
 
-class NoteSerializer(serializers.ModelSerializer):
+class NoteSerializer(TaggitSerializer, serializers.ModelSerializer):
     note_by        = serializers.SlugRelatedField(read_only=True, slug_field="username")
+    #for taggit
+    tags = TagListSerializerField()
 
     class Meta:
         model = Note
@@ -70,11 +73,14 @@ class NoteSerializer(serializers.ModelSerializer):
             'note_by',
             'recipe_version',
             'created_at',
+            'tags',
         ]
 
-class TasterFeedbackSerializer(serializers.ModelSerializer):
+class TasterFeedbackSerializer(TaggitSerializer, serializers.ModelSerializer):
     tester = serializers.SlugRelatedField(read_only=True, slug_field="username")
-    # test_version_number = serializers.SlugRelatedField(read_only=True, slug_field="test_version_number")
+    #for taggit
+    tags = TagListSerializerField()
+
     # rating = serializers.MultipleChoiceField(choices = TasterFeedback.RADIO)
     # saltiness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
     # sweetness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
@@ -87,7 +93,6 @@ class TasterFeedbackSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'created_at',
-            # 'test_version_number',
             'tester',
             'rating',
             'saltiness',
@@ -95,11 +100,14 @@ class TasterFeedbackSerializer(serializers.ModelSerializer):
             'portion',
             'texture',
             'additional_comment',
+            'tags',
         ]
 
 
-class TasterFeedbackDetailSerializer(serializers.ModelSerializer):
+class TasterFeedbackDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
     tester = serializers.SlugRelatedField(read_only=True, slug_field="username")
+    #for taggit
+    tags = TagListSerializerField()
 
     # rating = serializers.MultipleChoiceField(choices = TasterFeedback.RADIO)
     # saltiness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
@@ -121,4 +129,5 @@ class TasterFeedbackDetailSerializer(serializers.ModelSerializer):
             'additional_comment',
             'tester',
             'created_at',
+            'tags',
         ]

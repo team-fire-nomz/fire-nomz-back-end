@@ -3,7 +3,8 @@ from rest_framework import serializers
 from djoser.serializers import UserSerializer as DjoserUserSerializer
 from djoser.serializers import UserCreateSerializer as DjoserUserCreateSerializer
 from .models import RecipeVersion, Note, User, TasterFeedback
-
+from taggit.serializers import (TagListSerializerField,
+                                TaggitSerializer)
 
 class UserSerializer(DjoserUserSerializer):
     class Meta:
@@ -35,9 +36,10 @@ class UserCreateSerializer(DjoserUserCreateSerializer):
             'business_name',
         )
 
-class RecipeVersionSerializer(serializers.ModelSerializer):
+class RecipeVersionSerializer(TaggitSerializer, serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
     notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
+    tags = TagListSerializerField()
 
     class Meta:
         model  = RecipeVersion
@@ -52,6 +54,7 @@ class RecipeVersionSerializer(serializers.ModelSerializer):
             'successful_variation',
             'chef',
             'created_at',
+            'tags',
             'notes',
             ]
 

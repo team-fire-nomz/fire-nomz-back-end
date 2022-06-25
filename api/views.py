@@ -10,6 +10,7 @@ from api.serializers import NoteSerializer, RecipeVersionSerializer, UserCreateS
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsChefOrReadOnly, RecipeIsChefOrReadOnly
 from django.db.models import Q
+from taggit.models import Tag
 
 
 class UserViewSet(DjoserUserViewSet):
@@ -29,6 +30,13 @@ class RecipeVersionViewSet(ModelViewSet):
     queryset          = RecipeVersion.objects.all()
     serializer_class  = RecipeVersionSerializer
     permission_classes = (RecipeIsChefOrReadOnly,)
+
+    #for taggit
+    def index(request):
+        recipe_versions =RecipeVersion.get.prefetch_related('tags').all()
+        tags = Tag.objects.all()
+        context = {'recipe_versions':recipe_versions, 'tags': tags}
+        return render(request, 'api/index.html', context) # likely need to modify this as this is going to a page F/E isn't doing?!
 
     def get_queryset(self):
         search_term = self.request.query_params.get("search")

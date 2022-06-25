@@ -276,7 +276,7 @@ GET /recipes/id/
 ### Response
 
 Response for GET: id, title, version_number, ingredients, recipe_steps, image, ready_for_feedback, successful_variation, chef, created_at and
-answers (if any). In the below example, there are no answers for this recipe.
+notes (if any). In the below example, there are no notes for this recipe.
 
 ```json
 200 OK

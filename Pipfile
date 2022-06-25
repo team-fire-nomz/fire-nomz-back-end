@@ -18,6 +18,7 @@ django-on-heroku = "*"
 gunicorn = "*"
 drf-nested-routers = "*"
 pillow = "*"
+django-taggit = "*"
 
 [dev-packages]
 

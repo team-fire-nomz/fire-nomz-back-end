@@ -608,7 +608,7 @@ Requirement: user must be logged in.
 Note: can only use 1 search parameter. It queries the notes field.
 
 ```json
-GET /recipes/id/notes?search=nom
+GET /all_notes?search=nom
 ```
 
 ### Response

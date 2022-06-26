@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.forms import HiddenInput
 from taggit.managers import TaggableManager
 
 class User(AbstractUser):
@@ -24,7 +25,7 @@ class RecipeVersion(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255)
     
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     class Meta:
         verbose_name = 'RecipeVersion'
@@ -35,27 +36,26 @@ class RecipeVersion(models.Model):
 
 
 class Note(models.Model):
-    note = models.TextField(blank=True, null=True)
+    note = models.TextField(blank=False, null=True)
     recipe_version = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='notes', max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     note_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='notes')
-
-    tags = TaggableManager()
     
     def __str__(self):
         return f"{self.recipe_version} by {self.note_by}"
 
 
 class TasterFeedback(models.Model):
-    tags = TaggableManager()
 
-    ONE = '1' 
-    TWO = '2'
+    BLANK = '-'
+    ONE   = '1' 
+    TWO   = '2'
     THREE = '3'
-    FOUR = '4'
-    FIVE = '5'
+    FOUR  = '4'
+    FIVE  = '5'
 
     RADIO = [ 
+        (BLANK , '-'),
         (ONE , '1'), 
         (TWO , '2'), 
         (THREE , '3'), 
@@ -63,29 +63,33 @@ class TasterFeedback(models.Model):
         (FIVE , '5'), 
         ]
 
+    NO_ANSWER  = '----------'
     TOO_LITTLE = 'Too Little'
     JUST_RIGHT = 'Just Right'
-    TOO_MUCH = 'Too Much'
+    TOO_MUCH   = 'Too Much'
 
     SCALE = [ 
+        (NO_ANSWER  , '----------'),
         (TOO_LITTLE , 'Too Little'), 
         (JUST_RIGHT , 'Just Right'),
         (TOO_MUCH , 'Too Much'), 
         ]
     
-    YES = 'Yes'
-    NO = 'No'
+    NONE = '---'
+    YES  = 'Yes'
+    NO   = 'No'
 
     CHOICE = [ 
+        (NONE , '---'),
         (YES , 'Yes'), 
         (NO , 'No'), 
         ]
     
-    rating = models.CharField(max_length=6, choices=RADIO, default=THREE,)
-    saltiness = models.CharField(max_length= 11, choices=SCALE, default=JUST_RIGHT,)
-    sweetness = models.CharField(max_length= 11, choices=SCALE, default=JUST_RIGHT,)
-    portion = models.CharField(max_length= 11, choices=SCALE, default=JUST_RIGHT,)
-    texture = models.CharField(max_length= 5, choices=CHOICE, default=YES,)
+    rating = models.CharField(max_length=6, choices=RADIO, default=BLANK,)
+    saltiness = models.CharField(max_length= 11, choices=SCALE, default=NO_ANSWER,)
+    sweetness = models.CharField(max_length= 11, choices=SCALE, default=NO_ANSWER,)
+    portion = models.CharField(max_length= 11, choices=SCALE, default=NO_ANSWER,)
+    texture = models.CharField(max_length= 5, choices=CHOICE, default=NONE,)
     additional_comment = models.CharField(max_length=200,blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     test_recipe = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='taster_feedbacks', max_length = 255)

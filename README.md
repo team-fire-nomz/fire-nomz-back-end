@@ -26,6 +26,7 @@ NOTE: API Root is /api/
 | PUT    | [/recipes/{id}/notes/{id}/](#update-an-existing-note-for-a-recipe) | Update a specific note for a recipe         |
 | PATCH  | [/recipes/{id}/notes/{id}/](#update-part-of-a-specific-note)       | Update an existing note                     |
 | DELETE | [/recipes/{id}/notes/{id}/](#delete-a-specific-note-of-a-recipe)   | Delete part of an existing note             |
+| POST   | [/recipes/{id}/feedback/](#give-feedback-for-a-new-recipe)         | Give feedback for a new recipe              |
 
 
 ## Create a new user
@@ -213,7 +214,7 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: title, version_number, ingredients and recipe_steps
+Required fields: title, version_number, ingredients,  recipe_steps and tags
 
 ```json
 POST /recipes/
@@ -222,7 +223,8 @@ POST /recipes/
 	"title": "cheesesteak",
 	"version_number": "1",
 	"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
-	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!"
+	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
+	"tags": ["Burger"]
 }
 ```
 
@@ -242,18 +244,20 @@ POST /recipes/
 	"successful_variation": false,
 	"chef": "Eric",
 	"created_at": "06/22/2022 15:45",
-	"tags": [],
+	"tags": [
+		"cheesesteak"
+	],
 	"notes": []
 }
 ```
 
-If missing a required field, ex. recipe_steps:
+If missing a required field, ex. tags:
 
 ```json
 400 Bad Request
 
 {
-	"recipe_steps": [
+	"tags": [
 		"This field is required."
 	]
 }
@@ -290,7 +294,7 @@ notes (if any). In the below example, there are no notes for this recipe.
 
 {
 	"id": 2,
-	"title": "cheesesteak!",
+	"title": "cheesesteak",
 	"version_number": "1",
 	"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
 	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
@@ -298,8 +302,10 @@ notes (if any). In the below example, there are no notes for this recipe.
 	"ready_for_feedback": false,
 	"successful_variation": false,
 	"chef": "Eric",
-	"created_at": "06/22/2022 15:43",
-	"tags": [],
+	"created_at": "06/22/2022 15:45",
+	"tags": [
+		"cheesesteak"
+	],
 	"notes": []
 }
 ```
@@ -320,7 +326,10 @@ PUT /recipes/id/
 	"title": "cheesesteak!!",
 	"version_number": "2",
 	"ingredients": "1 Italian Roll, and MEAT nomz!!",
-	"recipe_steps": "Fry up the meat n pop it in the roll."
+	"recipe_steps": "Fry up the meat n pop it in the roll.",
+	"tags": [
+		"cheesesteak yumz"
+	],
 }
 ```
 
@@ -337,7 +346,9 @@ PUT /recipes/id/
 	"recipe_steps": "Fry up the meat n pop it in the roll.",
 	"chef": "Eric",
 	"created_at": "06/22/2022 15:45",
-	"tags": [],
+	"tags": [
+		"cheesesteak yumz"
+		],
 	"notes": []
 }
 ```
@@ -354,7 +365,7 @@ If missing a required field, ex. ingredients:
 }
 ```
 
-If a chef tries to edit anoter chef's recipe:
+If a chef tries to edit another chef's recipe:
 
 ```json
 403 Forbidden
@@ -393,8 +404,10 @@ PATCH /recipes/id/
 	"ingredients": "1 Italian Roll, and any meat (or tofu if you want)!?!?",
 	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
 	"chef": "Eric",
-	"created_at": "6/22/2022 15:50",
-	"tags": [],
+	"created_at": "6/22/2022 15:45",
+	"tags": [
+		"cheesesteak yumz"
+	],
 	"notes": []
 }
 ```
@@ -423,7 +436,7 @@ Note: if adding a new tag, you MUST include the other tag(s) in the string (if a
 PATCH /recipes/id/
 
 {
-	"tags": ["ChefEric", "Cheesesteak"]
+	"tags": ["cheesesteak yumz", "ChefEric"]
 }
 ```
 
@@ -439,10 +452,10 @@ PATCH /recipes/id/
 	"ingredients": "1 Italian Roll, and any meat (or tofu if you want)!?!?",
 	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
 	"chef": "Eric",
-	"created_at": "6/22/2022 15:50",
+	"created_at": "6/22/2022 15:45",
 	"tags": [
-		"ChefEric",
-		"Cheesesteak"
+		"cheesesteak yumz",
+		"ChefEric"
 	],
 	"notes": []
 }
@@ -731,4 +744,49 @@ If anonymous / guest attempts to delete a note:
 {
 	"detail": "Authentication credentials were not provided."
 }
+```
+
+
+## Give feedback for a new recipe 
+
+Requirement: user must be logged in. 
+
+### Request
+
+Required fields: rating (options are: #' 1 to 5), saltiness, sweetness and portion (options are: Too Little, Just Right, Too Much), and texture (options are: Yes or No) 
+
+Required in URL: recipe id.
+
+```json
+POST /recipes/id/feedback/
+
+[
+	{
+		"rating": "4",
+		"saltiness": "Too Little",
+		"sweetness": "Just Right",
+		"portion": "Just Right",
+		"texture": "No",
+		"additional_comment": "It's delish!",
+	}
+]
+```
+
+### Response
+
+```json
+[
+	{
+		"id": 1,
+		"test_recipe": 2,
+		"rating": "4",
+		"saltiness": "Too Little",
+		"sweetness": "Just Right",
+		"portion": "Just Right",
+		"texture": "No",
+		"additional_comment": "It's delish!",
+		"tester": "Eric",
+		"created_at": "06/25/2022 22:30"
+	}
+]
 ```

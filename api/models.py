@@ -25,7 +25,6 @@ class RecipeVersion(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255)
     
-    tags = TaggableManager(blank=True)
 
     class Meta:
         verbose_name = 'RecipeVersion'

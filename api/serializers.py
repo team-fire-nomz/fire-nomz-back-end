@@ -37,10 +37,10 @@ class UserCreateSerializer(DjoserUserCreateSerializer):
         )
 
 
-class RecipeVersionSerializer (TaggitSerializer, serializers.ModelSerializer):
+class RecipeVersionSerializer (serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
     notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
-    tags = TagListSerializerField() # to remove later, if possible
+  
     
     class Meta: 
         model  = RecipeVersion
@@ -55,15 +55,13 @@ class RecipeVersionSerializer (TaggitSerializer, serializers.ModelSerializer):
             'successful_variation',
             'chef',
             'created_at',
-            'tags', # to remove later, if possible
             'notes',
             ]
 
 # have to work on
-class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
+class RecipeVersionDetailSerializer(serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
     notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
-    tags = TagListSerializerField()
 
     class Meta:
         model  = RecipeVersion
@@ -78,7 +76,6 @@ class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerialize
             'successful_variation',
             'chef',
             'created_at',
-            'tags',
             'notes',
             ]
 

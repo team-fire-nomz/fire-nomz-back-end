@@ -9,11 +9,12 @@ NOTE: API Root is /api/
 | Method | Endpoint                                                           | Description                                 |
 | ------ | ------------------------------------------------------------------ | ------------------------------------------- |
 | POST   | [/users/](#create-a-new-user)                                      | Create a new user                           |
-| POST   | [/auth/token/login/](#login-user)                                  | Login user\*\* remove /api from url         |
+| POST   | [/auth/token/login/](#login-user)                                  | Login user (remove /api from url)           |
 | GET    | [/users/me/](#users-info)                                          | User's info                                 |
-| POST   | [/auth/token/logout/](#logout-user)                                | Logout user\*\* remove /api from url        |
-| GET    | [/recipes/](#list-of-recipes)                                      | List all created recipes                    |
-| GET    | [/recipes?search=<search_term>](#search-recipes)                   | Search recipes (limited to one search term) |
+| POST   | [/auth/token/logout/](#logout-user)                                | Logout user (remove /api from url)          |
+| GET    | [/recipes/](#list-of-recipes-logged-in-user)                       | List all logged in user created recipes     |
+| GET    | [/all_recipes/](#list-of-all-recipes)                              | List all recipes for all users              |
+| GET    | [/all_recipes?search=<search_term>](#search-recipes)               | Search recipes (limited to one search term) |
 | POST   | [/recipes/](#create-a-new-recipe-for-user)                         | Create a new recipe                         |
 | GET    | [/recipes/{id}/](#details-for-a-specific-recipe)                   | Details for a specific recipe               |
 | PUT    | [/recipes/{id}/](#update-an-existing-recipe)                       | Update an existing recipe                   |
@@ -22,7 +23,7 @@ NOTE: API Root is /api/
 | DELETE | [/recipes/{id}/](#delete-recipe)                                   | Delete an existing recipe                   |
 | POST   | [/recipes/{id}/notes/](#create-a-new-note-for-a-recipe)            | Create a note for a recipe                  |
 | GET    | [/recipes/{id}/notes/](#list-of-notes-for-a-recipe)                | List of notes for a recipe                  |
-| GET    | [/recipes/{id}/notes?search=<search_term>](#search-notes)          | Search notes (limited to one search term)   |
+| GET    | [/all_notes?search=<search_term>](#search-notes)                   | Search notes (limited to one search term)   |
 | PUT    | [/recipes/{id}/notes/{id}/](#update-an-existing-note-for-a-recipe) | Update a specific note for a recipe         |
 | PATCH  | [/recipes/{id}/notes/{id}/](#update-part-of-a-specific-note)       | Update an existing note                     |
 | DELETE | [/recipes/{id}/notes/{id}/](#delete-a-specific-note-of-a-recipe)   | Delete part of an existing note             |
@@ -140,9 +141,9 @@ POST /auth/token/logout/
 ```
 
 
-## List of recipes
+## List of recipes (logged in user)
 
-Returns list of all recipes.
+Returns list of all recipes for a logged in user.
 
 Requirement: user must be logged in.
 
@@ -162,8 +163,98 @@ GET /recipes/
 	"title": "Title Test",
 	"ingredients": "Ingredients Test",
 	"recipe_steps": "Recipe Test",
-	"chef": "Eric",
+	"image": null,
+	"ready_for_feedback": false,
+	"successful_variation": false,
 	"created_at": "06/17/22 22:10",
+	"tags": [],
+	"notes": []
+},
+{
+	"id": 2,
+	"title": "cheesesteak",
+	"version_number": "1",
+	"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
+	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
+	"image": null,
+	"ready_for_feedback": false,
+	"successful_variation": false,
+	"chef": "Eric",
+	"created_at": "06/22/2022 15:45",
+	"tags": [],
+	"notes": []
+}
+```
+
+
+## List of all recipes
+
+Returns list of all recipes for all users. 
+
+Requirement: user must be logged in.
+
+### Request
+
+```json
+GET /recipes/
+```
+
+### Response
+
+```json
+200 OK
+
+{
+	"id": 1,
+	"title": "Title Test",
+	"ingredients": "Ingredients Test",
+	"recipe_steps": "Recipe Test",
+	"image": null,
+	"ready_for_feedback": false,
+	"successful_variation": false,
+	"created_at": "06/17/22 22:10",
+	"tags": [],
+	"notes": []
+},
+{
+	"id": 2,
+	"title": "cheesesteak",
+	"version_number": "1",
+	"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
+	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
+	"image": null,
+	"ready_for_feedback": false,
+	"successful_variation": false,
+	"chef": "Eric",
+	"created_at": "06/22/2022 15:45",
+	"tags": [],
+	"notes": []
+},
+{
+	"id": 3,
+	"title": "5 Item Brownies",
+	"version_number": "1",
+	"ingredients": "Flour, sugar, eggs, butter, and cocoa powder",
+	"recipe_steps": "Melt some butter, stir in the sugar, eggs, flour, and cocoa powder and bake 'em... saavvvy?!",
+	"image": null,
+	"ready_for_feedback": false,
+	"successful_variation": false,
+	"chef": "Jack",
+	"created_at": "06/25/2022 23:42",
+	"tags": [],
+	"notes": []
+},
+{
+	"id": 4,
+	"title": "3 item Sugar Cookies",
+	"version_number": "1",
+	"ingredients": "Unsalted butter, granulated sugar, and flour",
+	"recipe_steps": "Make the dough: beat together butter, sugar, and flour until blended. Form the cookies: form the dough into 1-inch balls. Roll the balls in sugar, then flatten them with a glass or measuring cup.Bake: bake until just barely golden around the edges and bottom. Rest: let rest and cool for at least 10-15 minutes before eating.",
+	"image": null,
+	"ready_for_feedback": false,
+	"successful_variation": false,
+	"chef": "Jack",
+	"created_at": "06/25/2022 23:39",
 	"tags": [],
 	"notes": []
 }
@@ -181,7 +272,7 @@ Requirement: user must be logged in.
 Note: can only use 1 search parameter. It queries the title and ingredients fields.
 
 ```json
-GET /recipes?search=cheesesteak
+GET /all_recipes?search=cheesesteak
 ```
 
 ### Response
@@ -608,7 +699,7 @@ Requirement: user must be logged in.
 Note: can only use 1 search parameter. It queries the notes field.
 
 ```json
-GET /recipes/id/notes?search=nom
+GET /all_notes?search=nom
 ```
 
 ### Response

@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from taggit.managers import TaggableManager
 
 class User(AbstractUser):
     location = models.CharField(max_length=100, blank=True, null=True)
@@ -23,6 +24,12 @@ class RecipeVersion(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255)
     
+    tags = TaggableManager()
+
+    class Meta:
+        verbose_name = 'RecipeVersion'
+        verbose_name_plural = 'RecipeVersions'
+
     def __str__(self):
         return f"{self.title} by {self.chef}"
 
@@ -33,20 +40,15 @@ class Note(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     note_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='notes')
 
+    tags = TaggableManager()
+    
     def __str__(self):
         return f"{self.recipe_version} by {self.note_by}"
 
 
-class Tag(models.Model):
-    tag = models.CharField(max_length=255, blank=True, null=True)
-    recipe_version_tag = models.ManyToManyField('RecipeVersion', related_name='tags')
-    note_tag = models.ManyToManyField('Note', related_name='tags')
-
-    def __str__(self):
-        return f"Tag: {self.tag}"
-
-
 class TasterFeedback(models.Model):
+    tags = TaggableManager()
+
     ONE = '1' 
     TWO = '2'
     THREE = '3'
@@ -88,6 +90,11 @@ class TasterFeedback(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     test_recipe = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='taster_feedbacks', max_length = 255)
     tester = models.ForeignKey('User', on_delete=models.CASCADE, related_name='taster_feedbacks', max_length=50)
+
+    class Meta:
+        verbose_name = 'TasterFeedback'
+        verbose_name_plural = 'TasterFeedbacks'
+
 
     def __str__(self):
         return f"Feedback for {self.test_recipe}"

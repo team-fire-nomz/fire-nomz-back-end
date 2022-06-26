@@ -2,7 +2,7 @@ from django.shortcuts import render
 from djoser.views import UserViewSet as DjoserUserViewSet
 from django.db.models import Count
 from requests import Response
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import get_object_or_404, ListAPIView
 from api.models import User, RecipeVersion, Note, TasterFeedback
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateDestroyAPIView
@@ -10,6 +10,7 @@ from api.serializers import NoteSerializer, RecipeVersionSerializer, UserCreateS
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsChefOrReadOnly, RecipeIsChefOrReadOnly
 from django.db.models import Q
+from taggit.models import Tag
 
 
 class UserViewSet(DjoserUserViewSet):
@@ -29,6 +30,13 @@ class RecipeVersionViewSet(ModelViewSet):
     queryset          = RecipeVersion.objects.all()
     serializer_class  = RecipeVersionSerializer
     permission_classes = (RecipeIsChefOrReadOnly,)
+
+    #for taggit
+    def index(request):
+        recipe_versions =RecipeVersion.get.prefetch_related('tags').all()
+        tags = Tag.objects.all()
+        context = {'recipe_versions':recipe_versions, 'tags': tags}
+        return render(request, 'api/index.html', context) # likely need to modify this as this is going to a page F/E isn't doing?!
 
     def get_queryset(self):
         search_term = self.request.query_params.get("search")
@@ -104,10 +112,9 @@ class TasterFeedbackView(ModelViewSet):
         return serializer_class
 
     def perform_create(self, serializer):
-        test_version_number = get_object_or_404(RecipeVersion, pk=self.kwargs["recipe_pk"])
         test_recipe = get_object_or_404(RecipeVersion, pk=self.kwargs["recipe_pk"])
         if self.request.user.is_authenticated:
-            serializer.save(tester=self.request.user, test_version_number=test_version_number, test_recipe=test_recipe)
+            serializer.save(tester=self.request.user, test_recipe=test_recipe)
 
     def perform_destroy(self, instance):
         if self.request.user  == instance.tester:
@@ -144,3 +151,8 @@ class TasterFeedbackDetailView(ModelViewSet):
     def perform_update(self,serializer):
         if self.request.user == serializer.instance.tester:
             serializer.save()
+
+
+class RecipeListAPIView(ListAPIView):
+        queryset = RecipeVersion.objects.all()
+        serializer_class = RecipeVersionSerializer

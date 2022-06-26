@@ -18,6 +18,7 @@ NOTE: API Root is /api/
 | GET    | [/recipes/{id}/](#details-for-a-specific-recipe)                   | Details for a specific recipe               |
 | PUT    | [/recipes/{id}/](#update-an-existing-recipe)                       | Update an existing recipe                   |
 | PATCH  | [/recipes/{id}/](#update-part-of-an-existing-recipe)               | Update part of an existing recipe           |
+| PATCH  | [/recipes/{id}/](#add-a-tag-to-an-existing-recipe)                 | Add a tag to an existing recipe             |
 | DELETE | [/recipes/{id}/](#delete-recipe)                                   | Delete an existing recipe                   |
 | POST   | [/recipes/{id}/notes/](#create-a-new-note-for-a-recipe)            | Create a note for a recipe                  |
 | GET    | [/recipes/{id}/notes/](#list-of-notes-for-a-recipe)                | List of notes for a recipe                  |
@@ -156,12 +157,14 @@ GET /recipes/
 200 OK
 
 {
-    "id": 1,
-    "title": "Title Test",
-    "ingredients": "Ingredients Test",
-    "recipe_steps": "Recipe Test",
-    "chef": "Eric",
-    "created_at": "2022-06-17T22:10:19.000066",
+	"id": 1,
+	"title": "Title Test",
+	"ingredients": "Ingredients Test",
+	"recipe_steps": "Recipe Test",
+	"chef": "Eric",
+	"created_at": "06/17/22 22:10",
+	"tags": [],
+	"notes": []
 }
 ```
 
@@ -196,7 +199,9 @@ GET /recipes?search=cheesesteak
 		"ready_for_feedback": false,
 		"successful_variation": false,
 		"chef": "Eric",
-		"created_at": "06/22/2022 15:45"
+		"created_at": "06/22/2022 15:45",
+		"tags": [],
+		"notes": []
 	}
 ]
 ```
@@ -236,7 +241,9 @@ POST /recipes/
 	"ready_for_feedback": false,
 	"successful_variation": false,
 	"chef": "Eric",
-	"created_at": "06/22/2022 15:45"
+	"created_at": "06/22/2022 15:45",
+	"tags": [],
+	"notes": []
 }
 ```
 
@@ -276,7 +283,7 @@ GET /recipes/id/
 ### Response
 
 Response for GET: id, title, version_number, ingredients, recipe_steps, image, ready_for_feedback, successful_variation, chef, created_at and
-answers (if any). In the below example, there are no answers for this recipe.
+notes (if any). In the below example, there are no notes for this recipe.
 
 ```json
 200 OK
@@ -292,6 +299,7 @@ answers (if any). In the below example, there are no answers for this recipe.
 	"successful_variation": false,
 	"chef": "Eric",
 	"created_at": "06/22/2022 15:43",
+	"tags": [],
 	"notes": []
 }
 ```
@@ -328,7 +336,9 @@ PUT /recipes/id/
 	"ingredients": "1 Italian Roll, and MEAT nomz!!",
 	"recipe_steps": "Fry up the meat n pop it in the roll.",
 	"chef": "Eric",
-	"created_at": "06/22/2022 15:45"
+	"created_at": "06/22/2022 15:45",
+	"tags": [],
+	"notes": []
 }
 ```
 
@@ -383,7 +393,9 @@ PATCH /recipes/id/
 	"ingredients": "1 Italian Roll, and any meat (or tofu if you want)!?!?",
 	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
 	"chef": "Eric",
-	"created_at": "6/22/2022 15:50"
+	"created_at": "6/22/2022 15:50",
+	"tags": [],
+	"notes": []
 }
 ```
 
@@ -391,6 +403,54 @@ If a chef tries to edit anoter chef's recipe:
 
 ```json
 403 Forbidden
+
+{
+	"detail": "Editing posts is restricted to the author only."
+}
+```
+
+
+## Add a tag to an existing recipe
+
+Requirement: user must be logged in.
+
+### Request
+
+Required fields: tags 
+Note: if adding a new tag, you MUST include the other tag(s) in the string (if any), otherwise only the newest tag will be added. 
+
+```json
+PATCH /recipes/id/
+
+{
+	"tags": ["ChefEric", "Cheesesteak"]
+}
+```
+
+### Response
+
+```json
+200 OK
+
+{
+	"id": 2,
+	"title": "cheesesteak",
+	"version_number": "2",
+	"ingredients": "1 Italian Roll, and any meat (or tofu if you want)!?!?",
+	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
+	"chef": "Eric",
+	"created_at": "6/22/2022 15:50",
+	"tags": [
+		"ChefEric",
+		"Cheesesteak"
+	],
+	"notes": []
+}
+```
+
+If another logged in user attempts to add a tag to an existing recipe that is not theirs:
+```json
+404 Not Found
 
 {
 	"detail": "Editing posts is restricted to the author only."

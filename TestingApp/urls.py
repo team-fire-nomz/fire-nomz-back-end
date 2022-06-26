@@ -26,8 +26,6 @@ router.register('users',api_views.UserViewSet, 'users')
 router.register('recipes/(?P<recipe_pk>[^/.]+)/notes', api_views.NoteViewSet)
 router.register('recipes/(?P<recipe_pk>[^/.]+)/feedback', api_views.TasterFeedbackView)
 
-#router.register('recipes/(?P<recipe_pk>[^/.]+)/notes/(?P<note_pk>[^/.]+)/feedback/(?P<feedback_pk>[^/.]+)', api_views.TasterFeedbackDetailView)
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
@@ -35,6 +33,5 @@ urlpatterns = [
     path('auth/', include('djoser.urls.jwt')),
     path('auth/', include('djoser.urls.authtoken')),
     path('api/', include(router.urls)),
-
-    # path('api/recipes/<int:recipe_pk>/tests/<int:note_pk>/feedback/', api_views.AnswerListCreateView.as_view(),    name="recipe_feedback",),
+    path('recipe-list/', api_views.RecipeListAPIView.as_view(), name='recipe-list'),
 ]

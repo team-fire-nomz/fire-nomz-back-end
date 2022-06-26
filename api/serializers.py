@@ -36,6 +36,7 @@ class UserCreateSerializer(DjoserUserCreateSerializer):
             'business_name',
         )
 
+
 class RecipeVersionSerializer(TaggitSerializer, serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
     notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
@@ -59,6 +60,19 @@ class RecipeVersionSerializer(TaggitSerializer, serializers.ModelSerializer):
             'notes',
             ]
 
+#for taggit
+class RecipeListSerializer(TaggitSerializer, serializers.ModelSerializer):
+    tags = TagListSerializerField()
+
+    class Meta:
+        model = RecipeVersion
+        fields = (
+            'id',
+            'title',
+            'chef',
+            'tags',
+        )
+
 
 class NoteSerializer(TaggitSerializer, serializers.ModelSerializer):
     note_by        = serializers.SlugRelatedField(read_only=True, slug_field="username")
@@ -75,6 +89,7 @@ class NoteSerializer(TaggitSerializer, serializers.ModelSerializer):
             'created_at',
             'tags',
         ]
+
 
 class TasterFeedbackSerializer(TaggitSerializer, serializers.ModelSerializer):
     tester = serializers.SlugRelatedField(read_only=True, slug_field="username")

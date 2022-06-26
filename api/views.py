@@ -2,7 +2,7 @@ from django.shortcuts import render
 from djoser.views import UserViewSet as DjoserUserViewSet
 from django.db.models import Count
 from requests import Response
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import get_object_or_404, ListAPIView
 from api.models import User, RecipeVersion, Note, TasterFeedback
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateDestroyAPIView
@@ -151,3 +151,8 @@ class TasterFeedbackDetailView(ModelViewSet):
     def perform_update(self,serializer):
         if self.request.user == serializer.instance.tester:
             serializer.save()
+
+
+class RecipeListAPIView(ListAPIView):
+        queryset = RecipeVersion.objects.all()
+        serializer_class = RecipeVersionSerializer

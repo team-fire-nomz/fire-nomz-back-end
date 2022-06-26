@@ -1,4 +1,7 @@
-# Recipe Testing App
+# Bake It Till You Make It
+
+All requests, except registration, login and GET calls/searches to /all_recipes/ and /all_notes/ require authentication.
+
 
 ## Base URL:
 
@@ -36,7 +39,7 @@ NOTE: API Root is /api/
 
 Required fields: username and password
 
-Optional fields: email, first_name, last_name, date_joined, location and business name
+Optional fields: email, first_name, last_name, location and business name
 
 ```json
 POST /users/
@@ -93,7 +96,7 @@ POST auth/token/login/
 }
 ```
 
-NOTE: auth_token must be passed for all requests with the logged in user. It remains active till user is [logged out](#logout-user).
+NOTE: The auth_token must be used for all requests where the requirement is: user must be logged in. The token remains active until the user is [logged out](#logout-user).
 
 
 ## User's info
@@ -265,7 +268,7 @@ GET /recipes/
 
 Search through recipes.
 
-Requirement: user must be logged in.
+User can be anonymous / guest or logged in.
 
 ### Request
 
@@ -305,7 +308,16 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: title, version_number, ingredients,  recipe_steps and tags
+Required fields: title, version_number, ingredients, recipe_steps and tags
+
+### Note: ingredients can be entered as a string:
+```json
+"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
+```
+or as an array of strings
+```json
+"ingredients": ["1 Italian Roll", "your choice of meat (as much as you want)"],
+```
 
 ```json
 POST /recipes/
@@ -503,7 +515,7 @@ PATCH /recipes/id/
 }
 ```
 
-If a chef tries to edit anoter chef's recipe:
+If a chef tries to edit another chef's recipe:
 
 ```json
 403 Forbidden
@@ -516,7 +528,7 @@ If a chef tries to edit anoter chef's recipe:
 
 ## Add a tag to an existing recipe
 
-Requirement: user must be logged in.
+Requirement: user must be logged in. (Removed from production for now: 6/26/22)
 
 ### Request
 
@@ -692,7 +704,7 @@ GET /recipes/id/notes/
 
 Search through notes.
 
-Requirement: user must be logged in.
+User can be anonymous / guest or logged in.
 
 ### Request
 
@@ -844,7 +856,7 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: rating (options are: #' 1 to 5), saltiness, sweetness and portion (options are: Too Little, Just Right, Too Much), and texture (options are: Yes or No) 
+Required fields: Rating (options are: #'s 1 to 5) | Saltiness, Sweetness and Portion (options are: Too Little, Just Right, Too Much) | Texture (options are: Yes or No). 
 
 Required in URL: recipe id.
 

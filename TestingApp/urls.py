@@ -21,10 +21,12 @@ from rest_framework_nested.routers import NestedSimpleRouter
 from api import views as api_views
 
 router = DefaultRouter()
-router.register('recipes',api_views.RecipeVersionViewSet)
 router.register('users',api_views.UserViewSet, 'users')
+router.register('recipes',api_views.RecipeVersionViewSet)
 router.register('recipes/(?P<recipe_pk>[^/.]+)/notes', api_views.NoteViewSet)
 router.register('recipes/(?P<recipe_pk>[^/.]+)/feedback', api_views.TasterFeedbackView)
+router.register('all_notes', api_views.AllNoteViewSet, 'all_notes')
+# router.register('all_notes/(?P<note_pk>[^/.]+)', api_views.AllNoteViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,4 +36,6 @@ urlpatterns = [
     path('auth/', include('djoser.urls.authtoken')),
     path('api/', include(router.urls)),
     path('recipe-list/', api_views.RecipeListAPIView.as_view(), name='recipe-list'),
+
+    # path('api/all_notes/', api_views.AllNoteViewSet.as_view(), name='all-answers-list'),
 ]

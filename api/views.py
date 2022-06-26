@@ -6,11 +6,12 @@ from rest_framework.generics import get_object_or_404, ListAPIView
 from api.models import User, RecipeVersion, Note, TasterFeedback
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateDestroyAPIView
-from api.serializers import NoteSerializer, RecipeVersionSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
+from api.serializers import NoteSerializer, RecipeVersionSerializer, RecipeVersionDetailSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsChefOrReadOnly, RecipeIsChefOrReadOnly
 from django.db.models import Q
 from taggit.models import Tag
+from django.db.models.query import QuerySet
 
 
 class UserViewSet(DjoserUserViewSet):
@@ -77,6 +78,35 @@ class NoteViewSet(ModelViewSet):
     permission_classes = [IsChefOrReadOnly]
 
     def get_queryset(self):
+        assert self.queryset is not None, (
+            "'%s' should either include a `queryset` attribute, "
+            "or override the `get_queryset()` method."
+            % self.__class__.__name__
+        )
+
+        queryset = self.queryset
+        recipe_version = get_object_or_404(RecipeVersion, pk=self.kwargs["recipe_pk"])
+        if isinstance(queryset, QuerySet):
+            queryset = queryset.all()
+            queryset = queryset.filter(recipe_version=recipe_version)
+
+        return queryset
+
+    def perform_create(self, serializer):
+        if self.request.user.is_authenticated:
+            serializer.save(note_by=self.request.user)
+
+    def perform_update(self,serializer):
+        if self.request.user == serializer.instance.note_by:
+            serializer.save()
+
+
+class AllNoteViewSet(ModelViewSet):
+    queryset = Note.objects.all()
+    serializer_class = NoteSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
         search_term = self.request.query_params.get("search")
         if search_term is not None:
             results = Note.objects.filter(
@@ -89,14 +119,6 @@ class NoteViewSet(ModelViewSet):
                 total_recipes=Count('note')
             )
         return results.order_by('-id')
-
-    def perform_create(self, serializer):
-        if self.request.user.is_authenticated:
-            serializer.save(note_by=self.request.user)
-
-    def perform_update(self,serializer):
-        if self.request.user == serializer.instance.note_by:
-            serializer.save()
 
 
 class TasterFeedbackView(ModelViewSet):

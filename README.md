@@ -22,7 +22,7 @@ NOTE: API Root is /api/
 | DELETE | [/recipes/{id}/](#delete-recipe)                                   | Delete an existing recipe                   |
 | POST   | [/recipes/{id}/notes/](#create-a-new-note-for-a-recipe)            | Create a note for a recipe                  |
 | GET    | [/recipes/{id}/notes/](#list-of-notes-for-a-recipe)                | List of notes for a recipe                  |
-| GET    | [/recipes/{id}/notes?search=<search_term>](#search-notes)          | Search notes (limited to one search term)   |
+| GET    | [/all_notes?search=<search_term>](#search-notes)                   | Search notes (limited to one search term)   |
 | PUT    | [/recipes/{id}/notes/{id}/](#update-an-existing-note-for-a-recipe) | Update a specific note for a recipe         |
 | PATCH  | [/recipes/{id}/notes/{id}/](#update-part-of-a-specific-note)       | Update an existing note                     |
 | DELETE | [/recipes/{id}/notes/{id}/](#delete-a-specific-note-of-a-recipe)   | Delete part of an existing note             |

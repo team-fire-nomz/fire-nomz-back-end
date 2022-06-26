@@ -21,7 +21,7 @@ class UserSerializer(DjoserUserSerializer):
         )
 
 
-class UserCreateSerializer(DjoserUserCreateSerializer):
+class UserCreateSerializer(TaggitSerializer, DjoserUserCreateSerializer):
     class Meta:
         model = User
         fields = (
@@ -36,11 +36,32 @@ class UserCreateSerializer(DjoserUserCreateSerializer):
             'business_name',
         )
 
-
-class RecipeVersionSerializer(TaggitSerializer, serializers.ModelSerializer):
+class RecipeVersionSerializer (serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
     notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
-    #for taggit
+    tags = TagListSerializerField() # to remove later, if possible
+    
+    class Meta: 
+        model  = RecipeVersion
+        fields = [
+            'id',
+            'title',
+            'version_number',
+            'ingredients',
+            'recipe_steps',
+            'image',
+            'ready_for_feedback',
+            'successful_variation',
+            'chef',
+            'created_at',
+            'tags', # to remove later, if possible
+            'notes',
+            ]
+
+# have to work on
+class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
+    chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
+    notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
     tags = TagListSerializerField()
 
     class Meta:
@@ -59,6 +80,7 @@ class RecipeVersionSerializer(TaggitSerializer, serializers.ModelSerializer):
             'tags',
             'notes',
             ]
+
 
 #for taggit
 class RecipeListSerializer(TaggitSerializer, serializers.ModelSerializer):

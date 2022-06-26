@@ -1,7 +1,8 @@
 from django.contrib import admin
-from .models import User, Note, RecipeVersion, TasterFeedback
+from .models import User, RecipeVersion, Note, Ingredient, TasterFeedback
 
 admin.site.register(User)
+admin.site.register(Ingredient)
 admin.site.register(Note)
 admin.site.register(TasterFeedback)
 

@@ -25,6 +25,9 @@ router.register('users',api_views.UserViewSet, 'users')
 router.register('recipes',api_views.RecipeVersionViewSet)
 router.register('recipes/(?P<recipe_pk>[^/.]+)/notes', api_views.NoteViewSet)
 router.register('recipes/(?P<recipe_pk>[^/.]+)/feedback', api_views.TasterFeedbackView)
+
+router.register('recipes/(?P<recipe_pk>[^/.]+)/ingredients', api_views.IngredientViewSet, 'add_ingredient')
+
 router.register('all_recipes', api_views.AllRecipeVersionViewSet, 'all_recipes')
 router.register('all_notes', api_views.AllNoteViewSet, 'all_notes')
 
@@ -35,7 +38,10 @@ urlpatterns = [
     path('auth/', include('djoser.urls.jwt')),
     path('auth/', include('djoser.urls.authtoken')),
     path('api/', include(router.urls)),
-    path('recipe-list/', api_views.RecipeListAPIView.as_view(), name='recipe-list'),
+    path('recipe-list/', api_views.RecipeListAPIView.as_view(), name='recipe_list'),
+    
+    # path("recipes/<int:recipe_pk>/ingredients", api_views.IngredientViewSet.as_view(), name="add_ingredient",
+    # ),
 
     # path('api/all_notes/', api_views.AllNoteViewSet.as_view(), name='all-answers-list'),
 ]

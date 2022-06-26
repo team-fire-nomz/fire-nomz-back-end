@@ -1,3 +1,5 @@
+from operator import itemgetter
+from pyexpat import model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.forms import HiddenInput
@@ -17,7 +19,6 @@ class User(AbstractUser):
 class RecipeVersion(models.Model):
     title = models.CharField(max_length=255)
     version_number = models.CharField(max_length=3)
-    ingredients = models.TextField()
     recipe_steps = models.TextField()
     image = models.ImageField(blank=True, null=True)
     ready_for_feedback = models.BooleanField(default=False)
@@ -36,7 +37,13 @@ class RecipeVersion(models.Model):
 
 
 class Ingredient(models.Model):
-    pass
+    recipe = models.ForeignKey(RecipeVersion, on_delete=models.CASCADE, related_name='ingredients')
+    ingredient = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='ingredients', max_length=255)
+
+    def __str__(self):
+        return f"{self.amount} {self.item}"
 
 
 class Note(models.Model):

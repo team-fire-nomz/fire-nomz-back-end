@@ -1,8 +1,9 @@
 from dataclasses import fields
+from pyexpat import model
 from rest_framework import serializers
 from djoser.serializers import UserSerializer as DjoserUserSerializer
 from djoser.serializers import UserCreateSerializer as DjoserUserCreateSerializer
-from .models import RecipeVersion, Note, User, TasterFeedback
+from .models import User, RecipeVersion, Ingredient, Note, TasterFeedback
 from taggit.serializers import (TagListSerializerField,
                                 TaggitSerializer)
 
@@ -48,7 +49,6 @@ class RecipeVersionSerializer (TaggitSerializer, serializers.ModelSerializer):
             'id',
             'title',
             'version_number',
-            'ingredients',
             'recipe_steps',
             'image',
             'ready_for_feedback',
@@ -71,7 +71,6 @@ class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerialize
             'id',
             'title',
             'version_number',
-            'ingredients',
             'recipe_steps',
             'image',
             'ready_for_feedback',
@@ -95,6 +94,17 @@ class RecipeListSerializer(TaggitSerializer, serializers.ModelSerializer):
             'chef',
             'tags',
         )
+        
+
+class IngredientSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Ingredient
+        fields = (
+            'ingredients',
+            'created_at',
+        )
+    
 
 
 class NoteSerializer(TaggitSerializer, serializers.ModelSerializer):

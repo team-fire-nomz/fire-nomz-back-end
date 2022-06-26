@@ -3,10 +3,10 @@ from djoser.views import UserViewSet as DjoserUserViewSet
 from django.db.models import Count
 from requests import Response
 from rest_framework.generics import get_object_or_404, ListAPIView
-from api.models import User, RecipeVersion, Note, TasterFeedback
+from api.models import User, RecipeVersion, Ingredient, Note, TasterFeedback
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateDestroyAPIView
-from api.serializers import NoteSerializer, RecipeVersionSerializer, RecipeVersionDetailSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
+from api.serializers import NoteSerializer, RecipeVersionSerializer, RecipeVersionDetailSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer, IngredientSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsChefOrReadOnly, RecipeIsChefOrReadOnly
 from django.db.models import Q
@@ -120,6 +120,20 @@ class NoteViewSet(ModelViewSet):
 
     def perform_update(self,serializer):
         if self.request.user == serializer.instance.note_by:
+            serializer.save()
+
+
+class IngredientViewSet(ModelViewSet):
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
+    permission_classes = [IsChefOrReadOnly]
+
+    def perform_create(self, serializer):
+        if self.request.user.is_authenticated:
+            serializer.save(chef=self.request.user)
+
+    def perform_update(self,serializer):
+        if self.request.user == serializer.instance.chef:
             serializer.save()
 
 

@@ -35,6 +35,10 @@ class RecipeVersion(models.Model):
         return f"{self.title} by {self.chef}"
 
 
+class Ingredient(models.Model):
+    pass
+
+
 class Note(models.Model):
     note = models.TextField(blank=False, null=True)
     recipe_version = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='notes', max_length=255)

@@ -36,6 +36,7 @@ class UserCreateSerializer(DjoserUserCreateSerializer):
             'business_name',
         )
 
+
 class RecipeVersionSerializer (TaggitSerializer, serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
     notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')

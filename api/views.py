@@ -32,7 +32,46 @@ class RecipeVersionViewSet(ModelViewSet):
     serializer_class  = RecipeVersionSerializer
     permission_classes = (RecipeIsChefOrReadOnly,)
 
-    #for taggit
+    # # for taggit - not sure if this is needed here
+    def index(request):
+        recipe_versions =RecipeVersion.get.prefetch_related('tags').all()
+        tags = Tag.objects.all()
+        context = {'recipe_versions':recipe_versions, 'tags': tags}
+        return render(request, 'api/index.html', context) # likely need to modify this as this is going to a page F/E isn't doing?!
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if isinstance(queryset, QuerySet):
+            queryset = queryset.all()
+            if self.request.user.is_authenticated:
+                queryset = queryset.filter(chef=self.request.user)
+        return queryset.annotate(
+                total_answers=Count('notes')
+            )
+
+    def perform_create(self, serializer):
+        serializer.save(chef=self.request.user)
+
+    def perform_destroy(self, instance):
+        if self.request.user  == instance.chef:
+            instance.delete()
+
+    def perform_update(self,serializer):
+        if self.request.user == serializer.instance.chef:
+            serializer.save()
+
+    def get_serializer_class(self):
+        if self.action in ['retrieve']:
+            return RecipeVersionSerializer
+        return super().get_serializer_class()
+
+# for recipe search
+class AllRecipeVersionViewSet(ModelViewSet):
+    queryset          = RecipeVersion.objects.all()
+    serializer_class  = RecipeVersionSerializer
+    permission_classes = (RecipeIsChefOrReadOnly,)
+
+    # for taggit - not sure if this is needed here
     def index(request):
         recipe_versions =RecipeVersion.get.prefetch_related('tags').all()
         tags = Tag.objects.all()
@@ -53,23 +92,6 @@ class RecipeVersionViewSet(ModelViewSet):
                 total_recipes=Count('recipe_steps')
             )
         return results.order_by('-id')
-# need to check line 22 for the future
-
-    def perform_create(self, serializer):
-        serializer.save(chef=self.request.user)
-
-    def perform_destroy(self, instance):
-        if self.request.user  == instance.chef:
-            instance.delete()
-
-    def perform_update(self,serializer):
-        if self.request.user == serializer.instance.chef:
-            serializer.save()
-
-    def get_serializer_class(self):
-        if self.action in ['retrieve']:
-            return RecipeVersionSerializer
-        return super().get_serializer_class()
 
 
 class NoteViewSet(ModelViewSet):

@@ -69,7 +69,7 @@ class RecipeVersionViewSet(ModelViewSet):
 class AllRecipeVersionViewSet(ModelViewSet):
     queryset          = RecipeVersion.objects.all()
     serializer_class  = RecipeVersionSerializer
-    permission_classes = (RecipeIsChefOrReadOnly,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     # for taggit - not sure if this is needed here
     def index(request):

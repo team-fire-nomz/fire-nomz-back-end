@@ -48,7 +48,7 @@ class RecipeVersionSerializer (serializers.ModelSerializer):
         fields = [
             'id',
             'title',
-            'version_number',
+            # 'version_number',
             'ingredients',
             'recipe_steps',
             'image',
@@ -71,7 +71,7 @@ class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerialize
         fields = [
             'id',
             'title',
-            'version_number',
+            # 'version_number',
             'ingredients',
             'recipe_steps',
             'image',

@@ -79,7 +79,7 @@ class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerialize
             'successful_variation',
             'chef',
             'created_at',
-            'tags'
+            'tags',
             'notes',
             ]
 
@@ -98,8 +98,23 @@ class RecipeListSerializer(TaggitSerializer, serializers.ModelSerializer):
         )
 
 
-class NoteSerializer(TaggitSerializer, serializers.ModelSerializer):
+class NoteSerializer(serializers.ModelSerializer):
     note_by        = serializers.SlugRelatedField(read_only=True, slug_field="username")
+    
+    class Meta:
+        model = Note
+        fields = [
+            'id',
+            'note',
+            'note_by',
+            'recipe_version',
+            'created_at',
+        ]
+
+
+class NoteDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
+    note_by        = serializers.SlugRelatedField(read_only=True, slug_field="username")
+    tags = TagListSerializerField()
 
     class Meta:
         model = Note
@@ -108,6 +123,7 @@ class NoteSerializer(TaggitSerializer, serializers.ModelSerializer):
             'note',
             'note_by',
             'recipe_version',
+            'tags',
             'created_at',
         ]
 

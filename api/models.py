@@ -25,7 +25,7 @@ class RecipeVersion(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255)
 
-    tags = TaggableManager(blank=True)    
+    tags = TaggableManager(blank=True)
 
     class Meta:
         verbose_name = 'RecipeVersion'
@@ -44,6 +44,8 @@ class Note(models.Model):
     recipe_version = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='notes', max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     note_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='notes')
+
+    tags = TaggableManager(blank=True)
     
     def __str__(self):
         return f"{self.recipe_version} by {self.note_by}"

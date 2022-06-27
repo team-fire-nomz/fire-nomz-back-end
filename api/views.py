@@ -6,7 +6,7 @@ from rest_framework.generics import get_object_or_404, ListAPIView
 from api.models import User, RecipeVersion, Note, TasterFeedback
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateDestroyAPIView
-from api.serializers import NoteSerializer, RecipeVersionSerializer, RecipeVersionDetailSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
+from api.serializers import NoteDetailSerializer, NoteSerializer, RecipeVersionSerializer, RecipeVersionDetailSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsChefOrReadOnly, RecipeIsChefOrReadOnly
 from django.db.models import Q
@@ -68,10 +68,8 @@ class RecipeVersionViewSet(ModelViewSet):
 
         # Test separate serializers
         if self.request.method == 'POST':
-            serializer_class = RecipeVersionSerializer
-        else:
-            serializer_class = RecipeVersionDetailSerializer
-        return super().get_serializer_class()
+            return RecipeVersionSerializer
+        return RecipeVersionDetailSerializer
 
 
 
@@ -131,6 +129,12 @@ class NoteViewSet(ModelViewSet):
     def perform_update(self,serializer):
         if self.request.user == serializer.instance.note_by:
             serializer.save()
+
+    def get_serializer_class(self):
+        # Test separate serializers
+        if self.request.method == 'POST':
+            return NoteSerializer
+        return NoteDetailSerializer
 
 
 class AllNoteViewSet(ModelViewSet):

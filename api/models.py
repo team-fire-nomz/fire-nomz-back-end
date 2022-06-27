@@ -16,7 +16,6 @@ class User(AbstractUser):
 
 class RecipeVersion(models.Model):
     title = models.CharField(max_length=255)
-    version_number = models.CharField(max_length=3)
     ingredients = models.TextField()
     recipe_steps = models.TextField()
     image = models.ImageField(blank=True, null=True)
@@ -35,6 +34,12 @@ class RecipeVersion(models.Model):
         return f"{self.title} by {self.chef}"
 
 
+class RecipeProject(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    complete = models.BooleanField(default=False)        
+
+
 class Ingredient(models.Model):
     pass
 
@@ -42,6 +47,7 @@ class Ingredient(models.Model):
 class Note(models.Model):
     note = models.TextField(blank=False, null=True)
     recipe_version = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='notes', max_length=255)
+    note_image = models.ImageField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     note_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='notes')
 

@@ -67,7 +67,6 @@ class RecipeVersionViewSet(ModelViewSet):
         # return super().get_serializer_class()
 
         # Test separate serializers
-
         if self.request.method == 'POST':
             serializer_class = RecipeVersionSerializer
         else:

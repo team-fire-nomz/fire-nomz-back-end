@@ -72,6 +72,13 @@ class RecipeVersionViewSet(ModelViewSet):
         return RecipeVersionDetailSerializer
 
 
+class RecipeProjectViewSet(ModelViewSet):
+    pass
+    # queryset          = RecipeVersion.objects.all(filter=)?
+    # serializer_class  = RecipeVersionSerializer
+    # permission_classes = (RecipeIsChefOrReadOnly,)
+
+
 
 # for recipe search
 class AllRecipeVersionViewSet(ModelViewSet):

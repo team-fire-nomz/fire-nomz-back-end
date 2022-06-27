@@ -16,6 +16,7 @@ class User(AbstractUser):
 
 class RecipeVersion(models.Model):
     title = models.CharField(max_length=255)
+    version_number = models.IntegerField(blank=True, null=True)
     ingredients = models.TextField()
     recipe_steps = models.TextField()
     image = models.ImageField(blank=True, null=True)
@@ -23,7 +24,8 @@ class RecipeVersion(models.Model):
     successful_variation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255)
-
+    project = models.ForeignKey('RecipeProject', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255, null=True)
+    
     tags = TaggableManager(blank=True)
 
     class Meta:
@@ -32,12 +34,20 @@ class RecipeVersion(models.Model):
 
     def __str__(self):
         return f"{self.title} by {self.chef}"
-
+        
 
 class RecipeProject(models.Model):
     title = models.CharField(max_length=255)
-    description = models.TextField()
-    complete = models.BooleanField(default=False)        
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    complete = models.BooleanField(default=False)    
+
+    class Meta:
+        verbose_name = 'RecipeProject'
+        verbose_name_plural = 'RecipeProjects'
+
+    def __str__(self):
+        return f"{self.title}"
 
 
 class Ingredient(models.Model):

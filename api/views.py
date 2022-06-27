@@ -61,9 +61,20 @@ class RecipeVersionViewSet(ModelViewSet):
             serializer.save()
 
     def get_serializer_class(self):
-        if self.action in ['retrieve']:
-            return RecipeVersionSerializer
+        # Original working
+        # if self.action in ['retrieve']:
+        #     return RecipeVersionSerializer
+        # return super().get_serializer_class()
+
+        # Test separate serializers
+
+        if self.request.method == 'POST':
+            serializer_class = RecipeVersionSerializer
+        else:
+            serializer_class = RecipeVersionDetailSerializer
         return super().get_serializer_class()
+
+
 
 # for recipe search
 class AllRecipeVersionViewSet(ModelViewSet):

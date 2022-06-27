@@ -41,6 +41,7 @@ class RecipeVersionSerializer (serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
     notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
     ingredients = serializers.JSONField()
+    recipe_steps =serializers.JSONField() # test tomorrow!!
     
     class Meta: 
         model  = RecipeVersion
@@ -59,10 +60,11 @@ class RecipeVersionSerializer (serializers.ModelSerializer):
             ]
 
 # have to work on
-class RecipeVersionDetailSerializer(serializers.ModelSerializer):
+class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
     notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
     ingredients = serializers.JSONField()
+    tags = TagListSerializerField(blank=True)
 
     class Meta:
         model  = RecipeVersion
@@ -77,13 +79,14 @@ class RecipeVersionDetailSerializer(serializers.ModelSerializer):
             'successful_variation',
             'chef',
             'created_at',
+            'tags'
             'notes',
             ]
 
 
 #for taggit
 class RecipeListSerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
+    tags = TagListSerializerField(blank=True)
 
     class Meta:
         model = RecipeVersion

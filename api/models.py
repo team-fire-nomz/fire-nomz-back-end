@@ -14,16 +14,27 @@ class User(AbstractUser):
         return self.username
 
 
+class Recipe(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    complete = models.BooleanField(default=False)
+    recipe = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='recipes', max_length=255, null=True)
+    chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipes', max_length=100)
+
+    def __str__(self):
+        return f"{self.title} by {self.chef}"
+
+
 class RecipeVersion(models.Model):
     title = models.CharField(max_length=255)
-    version_number = models.IntegerField(blank=True, null=True)
     ingredients = models.TextField()
     recipe_steps = models.TextField()
     image = models.ImageField(blank=True, null=True)
     ready_for_feedback = models.BooleanField(default=False)
     successful_variation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255)
+    chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipe_versions', max_length=100)
     
     tags = TaggableManager(blank=True)
 
@@ -33,25 +44,6 @@ class RecipeVersion(models.Model):
 
     def __str__(self):
         return f"{self.title} by {self.chef}"
-
-
-class RecipeProject(models.Model):
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    complete = models.BooleanField(default=False)
-    recipe = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='recipe_projects', max_length=255, null=True)
-
-    class Meta:
-        verbose_name = 'RecipeProject'
-        verbose_name_plural = 'RecipeProjects'
-
-    def __str__(self):
-        return f"{self.title}"
-
-
-class Ingredient(models.Model):
-    pass
 
 
 class Note(models.Model):

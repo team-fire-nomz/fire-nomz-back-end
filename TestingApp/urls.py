@@ -25,7 +25,7 @@ router.register('users',api_views.UserViewSet, 'users')
 router.register('recipes',api_views.RecipeVersionViewSet)
 router.register('recipes/(?P<recipe_pk>[^/.]+)/notes', api_views.NoteViewSet)
 router.register('recipes/(?P<recipe_pk>[^/.]+)/feedback', api_views.TasterFeedbackView)
-router.register('recipes/(?P<recipe_pk>[^/.]+)/new_variation', api_views.RecipeProjectViewSet)
+router.register('recipes/(?P<recipe_pk>[^/.]+)/new-variation', api_views.RecipeViewSet)
 
 router.register('all_recipes', api_views.AllRecipeVersionViewSet, 'all_recipes')
 router.register('all_notes', api_views.AllNoteViewSet, 'all_notes')
@@ -39,8 +39,8 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/recipe-list/', api_views.RecipeListAPIView.as_view(), name='taggit-recipe-list'),
 
-    path('api/recipes-list/', api_views.RecipeProjectListView.as_view(), name='recipes-list'),
-    path('api/recipes-list/<int:pk>/', api_views.RecipeProjectListView.as_view(), name='recipes-list'),
+    path('api/recipes-list/', api_views.RecipeListView.as_view(), name='recipes-list'),
+    path('api/recipes-list/<int:pk>/', api_views.RecipeListView.as_view(), name='recipes-list'),
 
     # path('api/all_notes/', api_views.AllNoteViewSet.as_view(), name='all-answers-list'),
 ]

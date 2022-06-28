@@ -3,10 +3,10 @@ from djoser.views import UserViewSet as DjoserUserViewSet
 from django.db.models import Count
 from requests import Response
 from rest_framework.generics import get_object_or_404, ListAPIView, ListCreateAPIView
-from api.models import RecipeProject, User, RecipeVersion, Note, TasterFeedback
+from api.models import Recipe, User, RecipeVersion, Note, TasterFeedback
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateDestroyAPIView
-from api.serializers import NoteDetailSerializer, NoteSerializer, RecipeProjectSerializer, RecipeProjectListSerializer, RecipeVersionSerializer, RecipeVersionDetailSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
+from api.serializers import NoteDetailSerializer, NoteSerializer, RecipeListSerializer, RecipeSerializer, TaggitRecipeListSerializer, RecipeVersionSerializer, RecipeVersionDetailSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsChefOrReadOnly, RecipeIsChefOrReadOnly
 from django.db.models import Q
@@ -72,12 +72,12 @@ class RecipeVersionViewSet(ModelViewSet):
         return RecipeVersionDetailSerializer
 
 
-class RecipeProjectViewSet(ModelViewSet):
-    queryset           = RecipeProject.objects.all()
+class RecipeViewSet(ModelViewSet):
+    queryset           = Recipe.objects.all()
     # q1 = RecipeVersion.objects.filter('version_number', 'ingredients', 'recipe_steps')
-    # q2 = RecipeProject.objects.all()
+    # q2 = Recipe.objects.all()
     # queryset = q1 and q2
-    serializer_class   = RecipeProjectSerializer
+    serializer_class   = RecipeSerializer
     permission_classes = (RecipeIsChefOrReadOnly,)
  
 
@@ -97,12 +97,12 @@ class RecipeProjectViewSet(ModelViewSet):
     # does this need to be specific?!
     # def get_serializer_class(self):
     #     if self.request.method == 'POST':
-    #         return RecipeProjectViewSet
+    #         return RecipeViewSet
     #     return RecipeVersionDetailSerializer
 
-class RecipeProjectListView(ListCreateAPIView):
-    queryset = RecipeProject.objects.all()
-    serializer_class = RecipeProjectListSerializer
+class RecipeListView(ListCreateAPIView):
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeListSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
@@ -256,7 +256,7 @@ class TasterFeedbackDetailView(ModelViewSet):
             serializer.save()
 
 
-#for Taggit ?
+# for Taggit
 class RecipeListAPIView(ListAPIView):
     queryset = RecipeVersion.objects.all()
-    serializer_class = RecipeVersionSerializer
+    serializer_class = TaggitRecipeListSerializer

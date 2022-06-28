@@ -2,7 +2,7 @@ from dataclasses import fields
 from rest_framework import serializers
 from djoser.serializers import UserSerializer as DjoserUserSerializer
 from djoser.serializers import UserCreateSerializer as DjoserUserCreateSerializer
-from .models import RecipeProject, RecipeVersion, Note, User, TasterFeedback
+from .models import Recipe, RecipeVersion, Note, User, TasterFeedback
 from taggit.serializers import (TagListSerializerField,
                                 TaggitSerializer)
 
@@ -68,7 +68,7 @@ class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerialize
 
     # new for 6/28/22
     recipe_projects = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    # title = serializers.PrimaryKeyRelatedField(queryset=RecipeProject.objects.all(), many=False)
+    # title = serializers.PrimaryKeyRelatedField(queryset=Recipe.objects.all(), many=False)
 
     class Meta:
         model  = RecipeVersion
@@ -89,7 +89,7 @@ class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerialize
             ]
 
 
-class RecipeProjectSerializer(serializers.ModelSerializer):
+class RecipeSerializer(serializers.ModelSerializer):
     #these are not working
     # version_number = RecipeVersionSerializer(many=True) #add -> read_only=True ?
     # ingredients = RecipeVersionSerializer(many=True) #add -> read_only=True ?
@@ -99,12 +99,12 @@ class RecipeProjectSerializer(serializers.ModelSerializer):
     # recipe_steps = serializers.SerializerMethodField()
 
     class Meta:
-        model = RecipeProject
+        model = Recipe
         fields = [
             'id',
             'title',
             'description',
-            'version_number',
+            # 'version_number', -> not valid model when testing
             'ingredients',
             'recipe_steps',
             'created_at',
@@ -112,10 +112,10 @@ class RecipeProjectSerializer(serializers.ModelSerializer):
         ]
 
 
-class RecipeProjectListSerializer(serializers.ModelSerializer):
+class RecipeListSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = RecipeProject
+        model = Recipe
         fields = [
         'id',
         'title',
@@ -125,7 +125,7 @@ class RecipeProjectListSerializer(serializers.ModelSerializer):
 
 
 #for taggit
-class RecipeListSerializer(TaggitSerializer, serializers.ModelSerializer):
+class TaggitRecipeListSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
 
     class Meta:

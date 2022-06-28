@@ -1,13 +1,13 @@
 from django.contrib import admin
-from .models import Recipe, User, Note, RecipeVersion, TasterFeedback
+from .models import User, Recipe, RecipeVariation, Note, TasterFeedback
 
 admin.site.register(User)
-# admin.site.register(RecipeVersion)
+# admin.site.register(RecipeVariation)
 admin.site.register(Note)
 admin.site.register(TasterFeedback)
 admin.site.register(Recipe)
 
-@admin.register(RecipeVersion)
+@admin.register(RecipeVariation)
 class MyModelAdmin(admin.ModelAdmin):
     list_display = ['title', 'chef', 'tag_list']
 

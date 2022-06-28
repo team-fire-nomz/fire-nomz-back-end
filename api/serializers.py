@@ -2,7 +2,7 @@ from dataclasses import fields
 from rest_framework import serializers
 from djoser.serializers import UserSerializer as DjoserUserSerializer
 from djoser.serializers import UserCreateSerializer as DjoserUserCreateSerializer
-from .models import Recipe, RecipeVersion, Note, User, TasterFeedback
+from .models import Recipe, RecipeVariation, Note, User, TasterFeedback
 from taggit.serializers import (TagListSerializerField,
                                 TaggitSerializer)
 
@@ -39,14 +39,14 @@ class UserCreateSerializer(DjoserUserCreateSerializer):
         )
 
 
-class RecipeVersionSerializer (serializers.ModelSerializer):
+class RecipeVariationSerializer (serializers.ModelSerializer):
     chef         = serializers.SlugRelatedField(read_only=True, slug_field="username")
     notes        = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
     ingredients  = serializers.JSONField()
     recipe_steps = serializers.JSONField()
     
     class Meta: 
-        model  = RecipeVersion
+        model  = RecipeVariation
         fields = [
             'id',
             'title',
@@ -62,7 +62,7 @@ class RecipeVersionSerializer (serializers.ModelSerializer):
             ]
 
 # have to work on
-class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
+class RecipeVariationDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
     notes       = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
     ingredients = serializers.JSONField()
@@ -73,7 +73,7 @@ class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerialize
     # title = serializers.PrimaryKeyRelatedField(queryset=Recipe.objects.all(), many=False)
 
     class Meta:
-        model  = RecipeVersion
+        model  = RecipeVariation
         fields = [
             'id',
             'title',
@@ -93,9 +93,9 @@ class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerialize
 
 class RecipeSerializer(serializers.ModelSerializer):
     #these are not working
-    # version_number = RecipeVersionSerializer(many=True) #add -> read_only=True ?
-    # ingredients = RecipeVersionSerializer(many=True) #add -> read_only=True ?
-    # recipe_steps = RecipeVersionSerializer(many=True) #add -> read_only=True ?
+    # version_number = RecipeVariationSerializer(many=True) #add -> read_only=True ?
+    # ingredients = RecipeVariationSerializer(many=True) #add -> read_only=True ?
+    # recipe_steps = RecipeVariationSerializer(many=True) #add -> read_only=True ?
     # version_number = serializers.SerializerMethodField()
     # ingredients = serializers.SerializerMethodField()
     # recipe_steps = serializers.SerializerMethodField()
@@ -131,7 +131,7 @@ class TaggitRecipeListSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
 
     class Meta:
-        model = RecipeVersion
+        model = RecipeVariation
         fields = (
             'id',
             'title',

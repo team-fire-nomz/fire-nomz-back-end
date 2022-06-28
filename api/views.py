@@ -3,10 +3,10 @@ from djoser.views import UserViewSet as DjoserUserViewSet
 from django.db.models import Count
 from requests import Response
 from rest_framework.generics import get_object_or_404, ListAPIView, ListCreateAPIView
-from api.models import Recipe, User, RecipeVersion, Note, TasterFeedback
+from api.models import User, Recipe, RecipeVariation, Note, TasterFeedback
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateDestroyAPIView
-from api.serializers import NoteDetailSerializer, NoteSerializer, RecipeListSerializer, RecipeSerializer, TaggitRecipeListSerializer, RecipeVersionSerializer, RecipeVersionDetailSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
+from api.serializers import NoteDetailSerializer, NoteSerializer, RecipeListSerializer, RecipeSerializer, TaggitRecipeListSerializer, RecipeVariationSerializer, RecipeVariationDetailSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsChefOrReadOnly, RecipeIsChefOrReadOnly
 from django.db.models import Q
@@ -27,14 +27,14 @@ class UserViewSet(DjoserUserViewSet):
         return serializer_class
 
 
-class RecipeVersionViewSet(ModelViewSet):
-    queryset          = RecipeVersion.objects.all()
-    serializer_class  = RecipeVersionSerializer
+class RecipeVariationViewSet(ModelViewSet):
+    queryset          = RecipeVariation.objects.all()
+    serializer_class  = RecipeVariationSerializer
     permission_classes = (RecipeIsChefOrReadOnly,)
 
     # # for taggit - not sure if this is needed here
     def index(request):
-        recipe_versions =RecipeVersion.get.prefetch_related('tags').all()
+        recipe_versions =RecipeVariation.get.prefetch_related('tags').all()
         tags = Tag.objects.all()
         context = {'recipe_versions':recipe_versions, 'tags': tags}
         return render(request, 'api/index.html', context) # likely need to modify this as this is going to a page F/E isn't doing?!
@@ -63,43 +63,56 @@ class RecipeVersionViewSet(ModelViewSet):
     def get_serializer_class(self):
         # Original working
         # if self.action in ['retrieve']:
-        #     return RecipeVersionSerializer
+        #     return RecipeVariationSerializer
         # return super().get_serializer_class()
 
         # Test separate serializers
         if self.request.method == 'POST':
-            return RecipeVersionSerializer
-        return RecipeVersionDetailSerializer
+            return RecipeVariationSerializer
+        return RecipeVariationDetailSerializer
 
 
+# for recipes/pk/new-variation/
 class RecipeViewSet(ModelViewSet):
-    queryset           = Recipe.objects.all()
-    # q1 = RecipeVersion.objects.filter('version_number', 'ingredients', 'recipe_steps')
-    # q2 = Recipe.objects.all()
-    # queryset = q1 and q2
-    serializer_class   = RecipeSerializer
-    permission_classes = (RecipeIsChefOrReadOnly,)
- 
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeListSerializer # do I use this one or create new?
+    permission_classes = (RecipeIsChefOrReadOnly,) # or IsAuthenticatedOrReadOnly
 
-    # The following 3 won't work, as chef is not in this model / how to call user?
-    # def perform_create(self, serializer):
-    #     serializer.save(chef=self.request.user)
+    def get_queryset(self):
+        assert self.queryset is not None, (
+            "'%s' should either include a `queryset` attribute, "
+            "or override the `get_queryset()` method."
+            % self.__class__.__name__
+        )
 
-    # def perform_destroy(self, instance):
-    #     if self.request.user  == instance.chef:
-    #         instance.delete()
+        queryset = self.queryset
+        recipe_version = get_object_or_404(RecipeVariation, pk=self.kwargs["recipe_pk"])
+        if isinstance(queryset, QuerySet):
+            queryset = queryset.all()
+            queryset = queryset.filter(recipe_version=recipe_version)
 
-    # def perform_update(self,serializer):
-    #     if self.request.user == serializer.instance.chef:
-    #         serializer.save()
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(chef=self.request.user)
+
+    def perform_destroy(self, instance):
+        if self.request.user  == instance.chef:
+            instance.delete()
+
+    def perform_update(self,serializer):
+        if self.request.user == serializer.instance.chef:
+            serializer.save()
 
 
     # does this need to be specific?!
     # def get_serializer_class(self):
     #     if self.request.method == 'POST':
     #         return RecipeViewSet
-    #     return RecipeVersionDetailSerializer
+    #     return RecipeVariationDetailSerializer
 
+
+# For recipes-list/
 class RecipeListView(ListCreateAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeListSerializer
@@ -108,25 +121,25 @@ class RecipeListView(ListCreateAPIView):
     def get_queryset(self):
         search_term = self.request.query_params.get("search")
         if search_term is not None:
-            results = RecipeVersion.objects.filter(
+            results = RecipeVariation.objects.filter(
                 Q(title__icontains=search_term) 
             )
             results.order_by('-id')
 
         else:
-            results = RecipeVersion.objects.all().order_by('-id')
+            results = RecipeVariation.objects.all().order_by('-id')
         return results.order_by('-id')
 
 
-# for recipe search
-class AllRecipeVersionViewSet(ModelViewSet):
-    queryset          = RecipeVersion.objects.all()
-    serializer_class  = RecipeVersionSerializer
+# for all-recipes/ search
+class AllRecipeVariationViewSet(ModelViewSet):
+    queryset          = RecipeVariation.objects.all()
+    serializer_class  = RecipeVariationSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     # for taggit - not sure if this is needed here
     def index(request):
-        recipe_versions =RecipeVersion.get.prefetch_related('tags').all()
+        recipe_versions =RecipeVariation.get.prefetch_related('tags').all()
         tags = Tag.objects.all()
         context = {'recipe_versions':recipe_versions, 'tags': tags}
         return render(request, 'api/index.html', context) # likely need to modify this as this is going to a page F/E isn't doing?!
@@ -134,19 +147,20 @@ class AllRecipeVersionViewSet(ModelViewSet):
     def get_queryset(self):
         search_term = self.request.query_params.get("search")
         if search_term is not None:
-            results = RecipeVersion.objects.filter(
+            results = RecipeVariation.objects.filter(
                 Q(title__icontains=search_term) |
                 Q(ingredients__icontains=search_term)
             )
             results.order_by('-id')
 
         else:
-            results = RecipeVersion.objects.annotate(
+            results = RecipeVariation.objects.annotate(
                 total_recipes=Count('recipe_steps')
             )
         return results.order_by('-id')
     
 
+# for recipes/pk/notes/
 class NoteViewSet(ModelViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
@@ -160,7 +174,7 @@ class NoteViewSet(ModelViewSet):
         )
 
         queryset = self.queryset
-        recipe_version = get_object_or_404(RecipeVersion, pk=self.kwargs["recipe_pk"])
+        recipe_version = get_object_or_404(RecipeVariation, pk=self.kwargs["recipe_pk"])
         if isinstance(queryset, QuerySet):
             queryset = queryset.all()
             queryset = queryset.filter(recipe_version=recipe_version)
@@ -168,7 +182,7 @@ class NoteViewSet(ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        recipe_version = get_object_or_404(RecipeVersion, pk=self.kwargs["recipe_pk"])
+        recipe_version = get_object_or_404(RecipeVariation, pk=self.kwargs["recipe_pk"])
         if self.request.user.is_authenticated:
             serializer.save(note_by=self.request.user, recipe_version=recipe_version)
 
@@ -183,6 +197,7 @@ class NoteViewSet(ModelViewSet):
         return NoteDetailSerializer
 
 
+# for all-notes/ search
 class AllNoteViewSet(ModelViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
@@ -216,7 +231,7 @@ class TasterFeedbackView(ModelViewSet):
         return serializer_class
 
     def perform_create(self, serializer):
-        test_recipe = get_object_or_404(RecipeVersion, pk=self.kwargs["recipe_pk"])
+        test_recipe = get_object_or_404(RecipeVariation, pk=self.kwargs["recipe_pk"])
         if self.request.user.is_authenticated:
             serializer.save(tester=self.request.user, test_recipe=test_recipe)
 
@@ -259,5 +274,5 @@ class TasterFeedbackDetailView(ModelViewSet):
 
 # for Taggit
 class RecipeListAPIView(ListAPIView):
-    queryset = RecipeVersion.objects.all()
+    queryset = RecipeVariation.objects.all()
     serializer_class = TaggitRecipeListSerializer

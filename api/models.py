@@ -19,14 +19,14 @@ class Recipe(models.Model):
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False)
-    recipe = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='recipes', max_length=255, null=True)
+    recipe = models.ForeignKey('RecipeVariation', on_delete=models.CASCADE, related_name='recipes', max_length=255, null=True)
     chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipes', max_length=100)
 
     def __str__(self):
         return f"{self.title} by {self.chef}"
 
 
-class RecipeVersion(models.Model):
+class RecipeVariation(models.Model):
     title = models.CharField(max_length=255)
     ingredients = models.TextField()
     recipe_steps = models.TextField()
@@ -39,8 +39,8 @@ class RecipeVersion(models.Model):
     tags = TaggableManager(blank=True)
 
     class Meta:
-        verbose_name = 'RecipeVersion'
-        verbose_name_plural = 'RecipeVersions'
+        verbose_name = 'RecipeVariaton'
+        verbose_name_plural = 'RecipeVariations'
 
     def __str__(self):
         return f"{self.title} by {self.chef}"
@@ -48,7 +48,7 @@ class RecipeVersion(models.Model):
 
 class Note(models.Model):
     note = models.TextField(blank=False, null=True)
-    recipe_version = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='notes', max_length=255)
+    recipe_version = models.ForeignKey('RecipeVariation', on_delete=models.CASCADE, related_name='notes', max_length=255)
     note_image = models.ImageField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     note_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='notes')
@@ -106,7 +106,7 @@ class TasterFeedback(models.Model):
     texture = models.CharField(max_length= 5, choices=CHOICE, default=NONE,)
     additional_comment = models.CharField(max_length=200,blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    test_recipe = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='taster_feedbacks', max_length = 255)
+    test_recipe = models.ForeignKey('RecipeVariation', on_delete=models.CASCADE, related_name='taster_feedbacks', max_length = 255)
     tester = models.ForeignKey('User', on_delete=models.CASCADE, related_name='taster_feedbacks', max_length=50)
 
     class Meta:

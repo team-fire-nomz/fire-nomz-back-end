@@ -74,19 +74,24 @@ class RecipeVersionViewSet(ModelViewSet):
 
 class RecipeProjectViewSet(ModelViewSet):
     queryset           = RecipeVersion.objects.all() and RecipeProject.objects.all()
+    # q1 = RecipeVersion.objects.filter('version_number', 'ingredients', 'recipe_steps')
+    # q2 = RecipeProject.objects.all()
+    # queryset = q1 and q2
     serializer_class   = RecipeProjectSerializer
     permission_classes = (RecipeIsChefOrReadOnly,)
 
-    def perform_create(self, serializer, obj):
-        serializer.save(chef=self.request.user)
+    # The following 3 won't work, as chef is not in this model / how to call user?
+    # def perform_create(self, serializer):
+    #     serializer.save(chef=self.request.user)
 
-    def perform_destroy(self, instance):
-        if self.request.user  == instance.chef:
-            instance.delete()
+    # def perform_destroy(self, instance):
+    #     if self.request.user  == instance.chef:
+    #         instance.delete()
 
-    def perform_update(self,serializer):
-        if self.request.user == serializer.instance.chef:
-            serializer.save()
+    # def perform_update(self,serializer):
+    #     if self.request.user == serializer.instance.chef:
+    #         serializer.save()
+
 
     # does this need to be specific?!
     # def get_serializer_class(self):

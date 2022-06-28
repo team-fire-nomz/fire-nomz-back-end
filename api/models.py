@@ -34,7 +34,7 @@ class RecipeVersion(models.Model):
 
     def __str__(self):
         return f"{self.title} by {self.chef}"
-        
+
 
 class RecipeProject(models.Model):
     title = models.CharField(max_length=255)
@@ -64,7 +64,7 @@ class Note(models.Model):
     tags = TaggableManager(blank=True)
     
     def __str__(self):
-        return f"{self.recipe_version} by {self.note_by}"
+        return f"{self.note} | from {self.recipe_version}"
 
 
 class TasterFeedback(models.Model):

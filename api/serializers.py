@@ -85,9 +85,13 @@ class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerialize
 
 
 class RecipeProjectSerializer(serializers.ModelSerializer):
-    version_number = RecipeVersionSerializer(many=True) #add -> read_only=True ?
-    ingredients = RecipeVersionSerializer(many=True) #add -> read_only=True ?
-    recipe_steps = RecipeVersionSerializer(many=True) #add -> read_only=True ?
+    #these are not working
+    # version_number = RecipeVersionSerializer(many=True) #add -> read_only=True ?
+    # ingredients = RecipeVersionSerializer(many=True) #add -> read_only=True ?
+    # recipe_steps = RecipeVersionSerializer(many=True) #add -> read_only=True ?
+    version_number = serializers.SerializerMethodField()
+    ingredients = serializers.SerializerMethodField()
+    recipe_steps = serializers.SerializerMethodField()
 
     class Meta:
         model = RecipeProject

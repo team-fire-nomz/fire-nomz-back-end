@@ -2,7 +2,7 @@ from dataclasses import fields
 from rest_framework import serializers
 from djoser.serializers import UserSerializer as DjoserUserSerializer
 from djoser.serializers import UserCreateSerializer as DjoserUserCreateSerializer
-from .models import RecipeVersion, Note, User, TasterFeedback
+from .models import RecipeProject, RecipeVersion, Note, User, TasterFeedback
 from taggit.serializers import (TagListSerializerField,
                                 TaggitSerializer)
 
@@ -82,6 +82,25 @@ class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerialize
             'tags',
             'notes',
             ]
+
+
+class RecipeProjectSerializer(serializers.ModelSerializer):
+    version_number = RecipeVersionSerializer(many=True) #add -> read_only=True ?
+    ingredients = RecipeVersionSerializer(many=True) #add -> read_only=True ?
+    recipe_steps = RecipeVersionSerializer(many=True) #add -> read_only=True ?
+
+    class Meta:
+        model = RecipeProject
+        fields = [
+            'id',
+            'title',
+            'description',
+            'version_number',
+            'ingredients',
+            'recipe_steps',
+            'created_at',
+            'complete',  
+        ]
 
 
 #for taggit

@@ -79,6 +79,7 @@ class RecipeProjectViewSet(ModelViewSet):
     # queryset = q1 and q2
     serializer_class   = RecipeProjectSerializer
     permission_classes = (RecipeIsChefOrReadOnly,)
+ 
 
     # The following 3 won't work, as chef is not in this model / how to call user?
     # def perform_create(self, serializer):

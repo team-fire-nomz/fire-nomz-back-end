@@ -37,9 +37,10 @@ urlpatterns = [
     path('auth/', include('djoser.urls.jwt')),
     path('auth/', include('djoser.urls.authtoken')),
     path('api/', include(router.urls)),
-    path('recipe-list/', api_views.RecipeListAPIView.as_view(), name='taggit-recipe-list'),
+    path('api/recipe-list/', api_views.RecipeListAPIView.as_view(), name='taggit-recipe-list'),
 
-    path('recipes-list/', api_views.RecipeProjectListView.as_view(), name='recipes-list'),
+    path('api/recipes-list/', api_views.RecipeProjectListView.as_view(), name='recipes-list'),
+    path('api/recipes-list/<int:pk>/', api_views.RecipeProjectListView.as_view(), name='recipes-list'),
 
     # path('api/all_notes/', api_views.AllNoteViewSet.as_view(), name='all-answers-list'),
 ]

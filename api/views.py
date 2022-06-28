@@ -6,7 +6,7 @@ from rest_framework.generics import get_object_or_404, ListAPIView
 from api.models import RecipeProject, User, RecipeVersion, Note, TasterFeedback
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateDestroyAPIView
-from api.serializers import NoteDetailSerializer, NoteSerializer, RecipeProjectSerializer, RecipeVersionSerializer, RecipeVersionDetailSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
+from api.serializers import NoteDetailSerializer, NoteSerializer, RecipeProjectSerializer, RecipeProjectListSerializer, RecipeVersionSerializer, RecipeVersionDetailSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsChefOrReadOnly, RecipeIsChefOrReadOnly
 from django.db.models import Q
@@ -73,7 +73,7 @@ class RecipeVersionViewSet(ModelViewSet):
 
 
 class RecipeProjectViewSet(ModelViewSet):
-    queryset           = RecipeVersion.objects.all() and RecipeProject.objects.all()
+    queryset           = RecipeProject.objects.all()
     # q1 = RecipeVersion.objects.filter('version_number', 'ingredients', 'recipe_steps')
     # q2 = RecipeProject.objects.all()
     # queryset = q1 and q2
@@ -99,6 +99,22 @@ class RecipeProjectViewSet(ModelViewSet):
     #         return RecipeProjectViewSet
     #     return RecipeVersionDetailSerializer
 
+class RecipeProjectListView(ListAPIView):
+    queryset = RecipeProject.objects.all()
+    serializer_class = RecipeProjectListSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def get_queryset(self):
+        search_term = self.request.query_params.get("search")
+        if search_term is not None:
+            results = RecipeVersion.objects.filter(
+                Q(title__icontains=search_term) 
+            )
+            results.order_by('-id')
+
+        else:
+            results = RecipeVersion.objects.all().order_by('-id')
+        return results.order_by('-id')
 
 
 # for recipe search
@@ -128,7 +144,7 @@ class AllRecipeVersionViewSet(ModelViewSet):
                 total_recipes=Count('recipe_steps')
             )
         return results.order_by('-id')
-
+    
 
 class NoteViewSet(ModelViewSet):
     queryset = Note.objects.all()
@@ -239,6 +255,7 @@ class TasterFeedbackDetailView(ModelViewSet):
             serializer.save()
 
 
+#for Taggit ?
 class RecipeListAPIView(ListAPIView):
-        queryset = RecipeVersion.objects.all()
-        serializer_class = RecipeVersionSerializer
+    queryset = RecipeVersion.objects.all()
+    serializer_class = RecipeVersionSerializer

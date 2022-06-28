@@ -89,9 +89,9 @@ class RecipeProjectSerializer(serializers.ModelSerializer):
     # version_number = RecipeVersionSerializer(many=True) #add -> read_only=True ?
     # ingredients = RecipeVersionSerializer(many=True) #add -> read_only=True ?
     # recipe_steps = RecipeVersionSerializer(many=True) #add -> read_only=True ?
-    version_number = serializers.SerializerMethodField()
-    ingredients = serializers.SerializerMethodField()
-    recipe_steps = serializers.SerializerMethodField()
+    # version_number = serializers.SerializerMethodField()
+    # ingredients = serializers.SerializerMethodField()
+    # recipe_steps = serializers.SerializerMethodField()
 
     class Meta:
         model = RecipeProject
@@ -105,6 +105,17 @@ class RecipeProjectSerializer(serializers.ModelSerializer):
             'created_at',
             'complete',  
         ]
+
+class RecipeProjectListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = RecipeProject
+        fields = [
+        'id',
+        'title',
+        'created_at'
+        ]
+
 
 
 #for taggit

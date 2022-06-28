@@ -619,15 +619,12 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: recipe_version -> This number MUST match the recipes/id or it will post to another recipe's id (possible bug?)
-
 Optional fields: note 
 
 ```json
 POST /recipes/id/notes/
 
 {
-	"recipe_version": 1,
 	"note": "Chezsteak so nomz!"
 }
 ```
@@ -641,7 +638,6 @@ POST /recipes/id/notes/
 	"id": "1",
 	"note": "Chezsteak so nomz!",
 	"note_by": "Eric",
-	"recipe_version": "1",
 	"created_at": "06/23/2022 17:32"
 }
 
@@ -665,35 +661,30 @@ GET /recipes/id/notes/
 		"id": 6,
 		"note": "Yummish!",
 		"note_by": "Eric",
-		"recipe_version": 1,
 		"created_at": "06/23/2022 23:20"
 	},
 	{
 		"id": 5,
 		"note": "The best!",
 		"note_by": "Eric",
-		"recipe_version": 1,
 		"created_at": "06/23/2022 23:20"
 	},
 	{
 		"id": 4,
 		"note": "Nom nomz",
 		"note_by": "Eric",
-		"recipe_version": 1,
 		"created_at": "06/23/2022 23:19"
 	},
 	{
 		"id": 2,
 		"note": "Love this recipe.",
 		"note_by": "Eric",
-		"recipe_version": 1,
 		"created_at": "06/23/2022 23:03"
 	},
 	{
 		"id": 1,
 		"note": "Chezsteak so nomz!",
 		"note_by": "Eric",
-		"recipe_version": 1,
 		"created_at": "06/23/2022 23:01"
 	}
 ]
@@ -724,14 +715,12 @@ GET /all_notes?search=nom
 		"id": 4,
 		"note": "Nom nomz",
 		"note_by": "Eric",
-		"recipe_version": 1,
 		"created_at": "06/23/2022 23:19"
 	},
 	{
 		"id": 1,
 		"note": "Chezsteak so nomz!!",
 		"note_by": "Eric",
-		"recipe_version": 1,
 		"created_at": "06/23/2022 23:01"
 	}
 ]
@@ -744,13 +733,12 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: recipe_version and note*
+Required fields: note
 
 ```json
 PUT /recipes/id/notes/id/
 
 {
-	"recipe_version": 1,
 	"note": "Love this recipe.. DELISH!!"
 }
 ```
@@ -764,7 +752,6 @@ PUT /recipes/id/notes/id/
 	"id": 2,
 	"note": "Love this recipe.. DELISH!!",
 	"note_by": "Eric",
-	"recipe_version": 1,
 	"created_at": "06/23/2022 23:03"
 }
 ```
@@ -785,13 +772,12 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: recipe_version and/or note*
+Required fields: note
 
 ```json
 PATCH /recipes/id/notes/id/
 
 {
-	"recipe_version": 1,
 	"note": "SOO GOOD!!"
 }
 ```
@@ -805,7 +791,6 @@ PATCH /recipes/id/notes/id/
 	"id": 6,
 	"note": "SOO GOOD!!",
 	"note_by": "Eric",
-	"recipe_version": 1,
 	"created_at": "06/23/2022 23:20"
 }
 ```

@@ -3,10 +3,10 @@ from djoser.views import UserViewSet as DjoserUserViewSet
 from django.db.models import Count
 from requests import Response
 from rest_framework.generics import get_object_or_404, ListAPIView
-from api.models import User, RecipeVersion, Note, TasterFeedback
+from api.models import RecipeProject, User, RecipeVersion, Note, TasterFeedback
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateDestroyAPIView
-from api.serializers import NoteDetailSerializer, NoteSerializer, RecipeVersionSerializer, RecipeVersionDetailSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
+from api.serializers import NoteDetailSerializer, NoteSerializer, RecipeProjectSerializer, RecipeVersionSerializer, RecipeVersionDetailSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsChefOrReadOnly, RecipeIsChefOrReadOnly
 from django.db.models import Q
@@ -73,10 +73,26 @@ class RecipeVersionViewSet(ModelViewSet):
 
 
 class RecipeProjectViewSet(ModelViewSet):
-    pass
-    # queryset          = RecipeVersion.objects.all(filter=)?
-    # serializer_class  = RecipeVersionSerializer
-    # permission_classes = (RecipeIsChefOrReadOnly,)
+    queryset           = RecipeVersion.objects.all() and RecipeProject.objects.all()
+    serializer_class   = RecipeProjectSerializer
+    permission_classes = (RecipeIsChefOrReadOnly,)
+
+    def perform_create(self, serializer, obj):
+        serializer.save(chef=self.request.user)
+
+    def perform_destroy(self, instance):
+        if self.request.user  == instance.chef:
+            instance.delete()
+
+    def perform_update(self,serializer):
+        if self.request.user == serializer.instance.chef:
+            serializer.save()
+
+    # does this need to be specific?!
+    # def get_serializer_class(self):
+    #     if self.request.method == 'POST':
+    #         return RecipeProjectViewSet
+    #     return RecipeVersionDetailSerializer
 
 
 

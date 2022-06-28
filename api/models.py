@@ -24,7 +24,6 @@ class RecipeVersion(models.Model):
     successful_variation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255)
-    project = models.ForeignKey('RecipeProject', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255, null=True)
     
     tags = TaggableManager(blank=True)
 
@@ -40,7 +39,8 @@ class RecipeProject(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    complete = models.BooleanField(default=False)    
+    complete = models.BooleanField(default=False)
+    recipe = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='recipe_projects', max_length=255, null=True)
 
     class Meta:
         verbose_name = 'RecipeProject'

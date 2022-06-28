@@ -2,7 +2,7 @@ from django.shortcuts import render
 from djoser.views import UserViewSet as DjoserUserViewSet
 from django.db.models import Count
 from requests import Response
-from rest_framework.generics import get_object_or_404, ListAPIView
+from rest_framework.generics import get_object_or_404, ListAPIView, ListCreateAPIView
 from api.models import RecipeProject, User, RecipeVersion, Note, TasterFeedback
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateDestroyAPIView
@@ -99,7 +99,7 @@ class RecipeProjectViewSet(ModelViewSet):
     #         return RecipeProjectViewSet
     #     return RecipeVersionDetailSerializer
 
-class RecipeProjectListView(ListAPIView):
+class RecipeProjectListView(ListCreateAPIView):
     queryset = RecipeProject.objects.all()
     serializer_class = RecipeProjectListSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)

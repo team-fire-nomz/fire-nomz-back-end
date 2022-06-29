@@ -49,6 +49,7 @@ class RecipeListView(ListCreateAPIView):
         serializer.save(chef=self.request.user)
 
 
+# For recipes-list/ & now recipes/pk
 class RecipeListDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeListDetailSerializer
@@ -63,6 +64,7 @@ class RecipeListDetailView(RetrieveUpdateDestroyAPIView):
         return queryset.order_by('-id')
 
 
+# For
 class RecipeVariationViewSet(ModelViewSet):
     queryset          = RecipeVariation.objects.all()
     serializer_class  = RecipeVariationSerializer
@@ -108,7 +110,7 @@ class RecipeVariationViewSet(ModelViewSet):
         return RecipeVariationDetailSerializer
 
 
-# for recipes/pk/new-variation/
+# for recipes/pk/new-variation/ -> shouldn't need since RecipeVariation should take it's place
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeListSerializer # do I use this one or create new?

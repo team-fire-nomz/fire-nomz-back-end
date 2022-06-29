@@ -19,7 +19,7 @@ class Recipe(models.Model):
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False)
-    recipe = models.ForeignKey('RecipeVariation', on_delete=models.CASCADE, related_name='recipes', max_length=255, null=True)
+    recipe = models.ForeignKey('RecipeVariation', on_delete=models.CASCADE, related_name='recipes', max_length=255)
     chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipes', max_length=100)
 
     def __str__(self):
@@ -107,7 +107,7 @@ class TasterFeedback(models.Model):
     additional_comment = models.CharField(max_length=200,blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     test_recipe = models.ForeignKey('RecipeVariation', on_delete=models.CASCADE, related_name='taster_feedbacks', max_length = 255)
-    tester = models.ForeignKey('User', on_delete=models.CASCADE, related_name='taster_feedbacks', max_length=50)
+    taster = models.ForeignKey('User', on_delete=models.CASCADE, related_name='taster_feedbacks', max_length=50)
 
     class Meta:
         verbose_name = 'TasterFeedback'

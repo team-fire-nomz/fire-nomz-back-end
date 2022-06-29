@@ -158,6 +158,8 @@ GET /recipes/
 
 ### Response
 
+GET Response note: In the below example, there is no data for tags nor notes.
+
 ```json
 200 OK
 
@@ -169,16 +171,16 @@ GET /recipes/
 	"image": null,
 	"ready_for_feedback": false,
 	"successful_variation": false,
+	"chef": "Eric",
 	"created_at": "06/17/22 22:10",
 	"tags": [],
 	"notes": []
 },
 {
 	"id": 2,
-	"title": "cheesesteak",
-	"version_number": "1",
-	"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
-	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
+	"title": "Cheesecake",
+	"ingredients": "['graham cracker crumbs', 'cream cheese', 'sugar', 'brown sugar', 'butter', 'sour cream', 'salt', 'eggs']",
+	"recipe_steps": "add ingredients bake at 325 degrees F for 1 hour",
 	"image": null,
 	"ready_for_feedback": false,
 	"successful_variation": false,
@@ -204,27 +206,29 @@ GET /recipes/
 
 ### Response
 
+GET Response note: In the below example, there is no data for tags nor notes.
+
 ```json
 200 OK
 
 {
 	"id": 1,
-	"title": "Title Test",
-	"ingredients": "Ingredients Test",
-	"recipe_steps": "Recipe Test",
+	"title": "Chocolate Pie",
+	"ingredients": "Graham cracker crust, sugar, corn starch, salt, milk, 4 egg yolks, bittersweet chocolate, vanilla, butter, whipped cream",
+	"recipe_steps": "Make pudding then pour into pie crust. Chill for 4 hours in the refridgerator.",
 	"image": null,
 	"ready_for_feedback": false,
 	"successful_variation": false,
+	"chef": "Eric",
 	"created_at": "06/17/22 22:10",
 	"tags": [],
 	"notes": []
 },
 {
 	"id": 2,
-	"title": "cheesesteak",
-	"version_number": "1",
-	"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
-	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
+	"title": "Cheesecake",
+	"ingredients": "['graham cracker crumbs', 'cream cheese', 'sugar', 'brown sugar', 'butter', 'sour cream', 'salt', 'eggs']",
+	"recipe_steps": "add ingredients bake at 325 degrees F for 1 hour",
 	"image": null,
 	"ready_for_feedback": false,
 	"successful_variation": false,
@@ -236,7 +240,6 @@ GET /recipes/
 {
 	"id": 3,
 	"title": "5 Item Brownies",
-	"version_number": "1",
 	"ingredients": "Flour, sugar, eggs, butter, and cocoa powder",
 	"recipe_steps": "Melt some butter, stir in the sugar, eggs, flour, and cocoa powder and bake 'em... saavvvy?!",
 	"image": null,
@@ -250,7 +253,6 @@ GET /recipes/
 {
 	"id": 4,
 	"title": "3 item Sugar Cookies",
-	"version_number": "1",
 	"ingredients": "Unsalted butter, granulated sugar, and flour",
 	"recipe_steps": "Make the dough: beat together butter, sugar, and flour until blended. Form the cookies: form the dough into 1-inch balls. Roll the balls in sugar, then flatten them with a glass or measuring cup.Bake: bake until just barely golden around the edges and bottom. Rest: let rest and cool for at least 10-15 minutes before eating.",
 	"image": null,
@@ -275,7 +277,7 @@ User can be anonymous / guest or logged in.
 Note: can only use 1 search parameter. It queries the title and ingredients fields.
 
 ```json
-GET /all_recipes?search=cheesesteak
+GET /all_recipes?search=cheesecake
 ```
 
 ### Response
@@ -286,10 +288,9 @@ GET /all_recipes?search=cheesesteak
 [
 	{
 		"id": 2,
-		"title": "cheesesteak",
-		"version_number": "1",
-		"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
-		"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
+		"title": "Cheesecake",
+		"ingredients": ["graham cracker crumbs", "cream cheese", "sugar", "brown sugar", "butter", "sour cream", "salt", "eggs"],
+		"recipe_steps": "add ingredients bake at 325 degrees F for 1 hour",
 		"image": null,
 		"ready_for_feedback": false,
 		"successful_variation": false,
@@ -308,26 +309,26 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: title, version_number, ingredients, recipe_steps and tags
+Required fields: title, ingredients, recipe_steps 
 
-### Note: ingredients can be entered as a string:
+Optional field: tags
+
+## Note: ingredients can be entered as a a single string or an array of strings:
 ```json
-"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
+"ingredients": "Flour, sugar, eggs, butter, and cocoa",
 ```
 or as an array of strings
 ```json
-"ingredients": ["1 Italian Roll", "your choice of meat (as much as you want)"],
+"ingredients": ["Flour", "sugar", "eggs", "butter", "and cocoa"],
 ```
 
 ```json
 POST /recipes/
 
 {
-	"title": "cheesesteak",
-	"version_number": "1",
-	"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
-	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
-	"tags": ["Burger"]
+	"title": "Brownies",
+	"ingredients": "Flour, sugar, eggs, butter, and cocoa",
+	"recipe_steps": "Some butter, stir in the sugar, eggs, flour, and cocoa powder and bake it up.",
 }
 ```
 
@@ -338,29 +339,26 @@ POST /recipes/
 
 {
 	"id": 2,
-	"title": "cheesesteak",
-	"version_number": "1",
-	"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
-	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
+	"title": "Brownies",
+	"ingredients": "Flour, sugar, eggs, butter, and cocoa",
+	"recipe_steps": "Some butter, stir in the sugar, eggs, flour, and cocoa powder and bake it up.",
 	"image": null,
 	"ready_for_feedback": false,
 	"successful_variation": false,
 	"chef": "Eric",
 	"created_at": "06/22/2022 15:45",
-	"tags": [
-		"cheesesteak"
-	],
+	"tags": [],
 	"notes": []
 }
 ```
 
-If missing a required field, ex. tags:
+If missing a required field, ex. recipe_steps:
 
 ```json
 400 Bad Request
 
 {
-	"tags": [
+	"recipe_steps": [
 		"This field is required."
 	]
 }
@@ -389,26 +387,22 @@ GET /recipes/id/
 
 ### Response
 
-Response for GET: id, title, version_number, ingredients, recipe_steps, image, ready_for_feedback, successful_variation, chef, created_at and
-notes (if any). In the below example, there are no notes for this recipe.
+GET Response note: In the below example, there are no notes for tags nor notes.
 
 ```json
 200 OK
 
 {
 	"id": 2,
-	"title": "cheesesteak",
-	"version_number": "1",
-	"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
-	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
+	"title": "Cheesecake",
+	"ingredients": "['graham cracker crumbs', 'cream cheese', 'sugar', 'brown sugar', 'butter', 'sour cream', 'salt', 'eggs']",
+	"recipe_steps": "add ingredients bake at 325 degrees F for 1 hour",
 	"image": null,
 	"ready_for_feedback": false,
 	"successful_variation": false,
 	"chef": "Eric",
 	"created_at": "06/22/2022 15:45",
-	"tags": [
-		"cheesesteak"
-	],
+	"tags": [],
 	"notes": []
 }
 ```
@@ -420,19 +414,15 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: title, version_number, ingredients, and recipe_steps 
+Required fields: title, ingredients, and recipe_steps 
 
 ```json
 PUT /recipes/id/
 
 {
-	"title": "cheesesteak!!",
-	"version_number": "2",
-	"ingredients": "1 Italian Roll, and MEAT nomz!!",
-	"recipe_steps": "Fry up the meat n pop it in the roll.",
-	"tags": [
-		"cheesesteak yumz"
-	],
+	"title": "Cheesecake!!",
+	"ingredients": "Graham cracker crumbs, cream cheese, sugar, butter, salt, eggs",
+	"recipe_steps": "Add ingreds, bake at 325 degrees F for 1 hour. Let cool for 20 mins.. then serve!"
 }
 ```
 
@@ -443,15 +433,12 @@ PUT /recipes/id/
 
 {
 	"id": 2,
-	"title": "cheesesteak!!",
-	"version_number": "2",
-	"ingredients": "1 Italian Roll, and MEAT nomz!!",
-	"recipe_steps": "Fry up the meat n pop it in the roll.",
+	"title": "Cheesecake!!",
+	"ingredients": "Graham cracker crumbs, cream cheese, sugar, butter, salt, eggs",
+	"recipe_steps": "Add ingreds, bake at 325 degrees F for 1 hour. Let cool for 20 mins.. then serve!",
 	"chef": "Eric",
 	"created_at": "06/22/2022 15:45",
-	"tags": [
-		"cheesesteak yumz"
-		],
+	"tags": [],
 	"notes": []
 }
 ```
@@ -485,13 +472,13 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: title and/or version_number and/or ingredients and/or recipe_steps
+Required fields: title and/or ingredients and/or recipe_steps
 
 ```json
 PATCH /recipes/id/
 
 {
-	"ingredients": "1 Italian Roll, and any meat (or tofu if you want)!?!?",
+	"ingredients": "Graham cracker crumbs, eggs, butter, salt, brown sugar, cream cheese, sugar."
 }
 ```
 
@@ -502,15 +489,12 @@ PATCH /recipes/id/
 
 {
 	"id": 2,
-	"title": "cheesesteak",
-	"version_number": "2",
-	"ingredients": "1 Italian Roll, and any meat (or tofu if you want)!?!?",
-	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
+	"title": "Cheesecake!!",
+	"ingredients": "Graham cracker crumbs, eggs, butter, salt, brown sugar, cream cheese, sugar.",
+	"recipe_steps": "Add ingreds, bake at 325 degrees F for 1 hour. Let cool for 20 mins.. then serve!",
 	"chef": "Eric",
 	"created_at": "6/22/2022 15:45",
-	"tags": [
-		"cheesesteak yumz"
-	],
+	"tags": [],
 	"notes": []
 }
 ```
@@ -528,18 +512,19 @@ If a chef tries to edit another chef's recipe:
 
 ## Add a tag to an existing recipe
 
-Requirement: user must be logged in. (Removed from production for now: 6/26/22)
+Requirement: user must be logged in. 
 
 ### Request
 
 Required fields: tags 
+
 Note: if adding a new tag, you MUST include the other tag(s) in the string (if any), otherwise only the newest tag will be added. 
 
 ```json
 PATCH /recipes/id/
 
 {
-	"tags": ["cheesesteak yumz", "ChefEric"]
+	"tags": ["PhillyCreamCheese", "cheesecake yumz", "ChefEric"]
 }
 ```
 
@@ -550,16 +535,16 @@ PATCH /recipes/id/
 
 {
 	"id": 2,
-	"title": "cheesesteak",
-	"version_number": "2",
-	"ingredients": "1 Italian Roll, and any meat (or tofu if you want)!?!?",
-	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
+	"title": "Cheesecake!!",
+	"ingredients": "Graham cracker crumbs, eggs, butter, salt, brown sugar, cream cheese, sugar.",
+	"recipe_steps": "Add ingreds, bake at 325 degrees F for 1 hour. Let cool for 20 mins.. then serve!",
 	"chef": "Eric",
 	"created_at": "6/22/2022 15:45",
 	"tags": [
-		"cheesesteak yumz",
+		"PhillyCreamCheese", 
+		"cheesecake yumz", 
 		"ChefEric"
-	],
+		],
 	"notes": []
 }
 ```
@@ -619,16 +604,13 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: recipe_version -> This number MUST match the recipes/id or it will post to another recipe's id (possible bug?)
-
-Optional fields: note 
+Required fields: note 
 
 ```json
 POST /recipes/id/notes/
 
 {
-	"recipe_version": 1,
-	"note": "Chezsteak so nomz!"
+	"note": "Chezcake so nomz!"
 }
 ```
 
@@ -639,9 +621,9 @@ POST /recipes/id/notes/
 
 {
 	"id": "1",
-	"note": "Chezsteak so nomz!",
+	"note": "Chezcake so nomz!",
 	"note_by": "Eric",
-	"recipe_version": "1",
+	"recipe_version": "2",
 	"created_at": "06/23/2022 17:32"
 }
 
@@ -665,7 +647,7 @@ GET /recipes/id/notes/
 		"id": 6,
 		"note": "Yummish!",
 		"note_by": "Eric",
-		"recipe_version": 1,
+		"recipe_version": 2,
 		"created_at": "06/23/2022 23:20"
 	},
 	{
@@ -686,14 +668,14 @@ GET /recipes/id/notes/
 		"id": 2,
 		"note": "Love this recipe.",
 		"note_by": "Eric",
-		"recipe_version": 1,
+		"recipe_version": 2,
 		"created_at": "06/23/2022 23:03"
 	},
 	{
 		"id": 1,
 		"note": "Chezsteak so nomz!",
 		"note_by": "Eric",
-		"recipe_version": 1,
+		"recipe_version": 2,
 		"created_at": "06/23/2022 23:01"
 	}
 ]
@@ -729,9 +711,9 @@ GET /all_notes?search=nom
 	},
 	{
 		"id": 1,
-		"note": "Chezsteak so nomz!!",
+		"note": "Chezcake so nomz!!",
 		"note_by": "Eric",
-		"recipe_version": 1,
+		"recipe_version": 2,
 		"created_at": "06/23/2022 23:01"
 	}
 ]
@@ -744,13 +726,12 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: recipe_version and note*
+Required fields: note
 
 ```json
 PUT /recipes/id/notes/id/
 
 {
-	"recipe_version": 1,
 	"note": "Love this recipe.. DELISH!!"
 }
 ```
@@ -764,7 +745,7 @@ PUT /recipes/id/notes/id/
 	"id": 2,
 	"note": "Love this recipe.. DELISH!!",
 	"note_by": "Eric",
-	"recipe_version": 1,
+	"recipe_version": 2,
 	"created_at": "06/23/2022 23:03"
 }
 ```
@@ -785,13 +766,12 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: recipe_version and/or note*
+Required fields: note
 
 ```json
 PATCH /recipes/id/notes/id/
 
 {
-	"recipe_version": 1,
 	"note": "SOO GOOD!!"
 }
 ```
@@ -805,7 +785,7 @@ PATCH /recipes/id/notes/id/
 	"id": 6,
 	"note": "SOO GOOD!!",
 	"note_by": "Eric",
-	"recipe_version": 1,
+	"recipe_version": 2,
 	"created_at": "06/23/2022 23:20"
 }
 ```

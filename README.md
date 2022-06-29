@@ -619,15 +619,12 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: recipe_version -> This number MUST match the recipes/id or it will post to another recipe's id (possible bug?)
-
-Optional fields: note 
+Required fields: note 
 
 ```json
 POST /recipes/id/notes/
 
 {
-	"recipe_version": 1,
 	"note": "Chezsteak so nomz!"
 }
 ```

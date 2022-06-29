@@ -107,7 +107,6 @@ class NoteSerializer(serializers.ModelSerializer):
             'id',
             'note',
             'note_by',
-            'recipe_version',
             'created_at',
         ]
 

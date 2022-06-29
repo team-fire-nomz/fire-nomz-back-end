@@ -124,7 +124,8 @@ class NoteViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         if self.request.user.is_authenticated:
-            serializer.save(note_by=self.request.user)
+            recipe_version = get_object_or_404(RecipeVersion, pk=self.kwargs["recipe_pk"])
+            serializer.save(note_by=self.request.user, recipe_version=recipe_version)
 
     def perform_update(self,serializer):
         if self.request.user == serializer.instance.note_by:

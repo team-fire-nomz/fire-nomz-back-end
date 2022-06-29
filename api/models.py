@@ -40,7 +40,7 @@ class Ingredient(models.Model):
 
 
 class Note(models.Model):
-    note = models.TextField(blank=False, null=True)
+    note = models.TextField(blank=False)
     recipe_version = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='notes', max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     note_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='notes')

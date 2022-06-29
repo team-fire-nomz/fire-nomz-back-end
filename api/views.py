@@ -46,7 +46,8 @@ class RecipeListView(ListCreateAPIView):
         return results.order_by('-id')
 
     def perform_create(self, serializer):
-        serializer.save(chef=self.request.user)
+        recipe_id = get_object_or_404(Recipe, pk=self.kwargs["recipe_pk"])
+        serializer.save(chef=self.request.user, recipe_id=recipe_id)
 
 
 # For recipes-list/ & now recipes/pk
@@ -64,7 +65,7 @@ class RecipeListDetailView(RetrieveUpdateDestroyAPIView):
         return queryset.order_by('-id')
 
 
-# For
+# For recipes/pk/recipe-variation
 class RecipeVariationViewSet(ModelViewSet):
     queryset          = RecipeVariation.objects.all()
     serializer_class  = RecipeVariationSerializer
@@ -110,7 +111,7 @@ class RecipeVariationViewSet(ModelViewSet):
         return RecipeVariationDetailSerializer
 
 
-# for recipes/pk/new-variation/ -> shouldn't need since RecipeVariation should take it's place
+# For recipes/pk/new-variation/ -> shouldn't need since RecipeVariation should take it's place
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeListSerializer # do I use this one or create new?
@@ -179,7 +180,7 @@ class AllRecipeVariationViewSet(ModelViewSet):
         return results.order_by('-id')
     
 
-# for recipes/pk/notes/
+# For recipes/pk/notes/
 class NoteViewSet(ModelViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
@@ -216,7 +217,7 @@ class NoteViewSet(ModelViewSet):
         return NoteDetailSerializer
 
 
-# for all-notes/ search
+# For all-notes/ search
 class AllNoteViewSet(ModelViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer

@@ -19,7 +19,6 @@ class Recipe(models.Model):
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False)
-    recipe = models.ForeignKey('RecipeVariation', on_delete=models.CASCADE, related_name='recipes', max_length=255)
     chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipes', max_length=100)
 
     def __str__(self):
@@ -34,7 +33,8 @@ class RecipeVariation(models.Model):
     ready_for_feedback = models.BooleanField(default=False)
     successful_variation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipe_versions', max_length=100)
+    chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipe_variations', max_length=100)
+    variation_number = models.ForeignKey('RecipeVariation', on_delete=models.CASCADE, related_name='recipe_variations', max_length=255,)
     
     tags = TaggableManager(blank=True)
 

@@ -2,11 +2,10 @@ from django.shortcuts import render
 from djoser.views import UserViewSet as DjoserUserViewSet
 from django.db.models import Count
 from requests import Response
-from rest_framework.generics import get_object_or_404, ListAPIView, ListCreateAPIView
+from rest_framework.generics import get_object_or_404, ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
 from api.models import User, Recipe, RecipeVariation, Note, TasterFeedback
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.generics import UpdateAPIView, RetrieveUpdateDestroyAPIView
-from api.serializers import NoteDetailSerializer, NoteSerializer, RecipeListSerializer, RecipeSerializer, TaggitRecipeListSerializer, RecipeVariationSerializer, RecipeVariationDetailSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
+from api.serializers import NoteDetailSerializer, NoteSerializer, RecipeListSerializer, RecipeSerializer, TaggitRecipeListSerializer, RecipeVariationSerializer, RecipeVariationDetailSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer, RecipeListDetailSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsChefOrReadOnly, RecipeIsChefOrReadOnly
 from django.db.models import Q
@@ -27,6 +26,43 @@ class UserViewSet(DjoserUserViewSet):
         return serializer_class
 
 
+# For recipes-list/ & now recipes/
+class RecipeListView(ListCreateAPIView):
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeListSerializer
+    permission_classes = (RecipeIsChefOrReadOnly,)
+
+    def get_queryset(self):
+        search_term = self.request.query_params.get("search")
+        if search_term is not None:
+            results = Recipe.objects.filter(
+                Q(title__icontains=search_term) |
+                Q(description__icontains=search_term)
+            )
+            results
+
+        else:
+            results = Recipe.objects.all().order_by('-id')
+        return results.order_by('-id')
+
+    def perform_create(self, serializer):
+        serializer.save(chef=self.request.user)
+
+
+class RecipeListDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeListDetailSerializer
+    permission_classes = (RecipeIsChefOrReadOnly,)
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if isinstance(queryset, QuerySet):
+            queryset = queryset.all()
+            if self.request.user.is_authenticated:
+                queryset = queryset.filter(chef=self.request.user)
+        return queryset.order_by('-id')
+
+
 class RecipeVariationViewSet(ModelViewSet):
     queryset          = RecipeVariation.objects.all()
     serializer_class  = RecipeVariationSerializer
@@ -34,9 +70,9 @@ class RecipeVariationViewSet(ModelViewSet):
 
     # # for taggit - not sure if this is needed here
     def index(request):
-        recipe_versions =RecipeVariation.get.prefetch_related('tags').all()
+        # recipe_versions =RecipeVariation.get.prefetch_related('tags').all()
         tags = Tag.objects.all()
-        context = {'recipe_versions':recipe_versions, 'tags': tags}
+        context = {'tags': tags} # removed 'recipe_versions':recipe_versions
         return render(request, 'api/index.html', context) # likely need to modify this as this is going to a page F/E isn't doing?!
 
     def get_queryset(self):
@@ -86,12 +122,12 @@ class RecipeViewSet(ModelViewSet):
         )
 
         queryset = self.queryset
-        recipe_version = get_object_or_404(RecipeVariation, pk=self.kwargs["recipe_pk"])
+        # recipe_version = get_object_or_404(RecipeVariation, pk=self.kwargs["recipe_pk"])
         if isinstance(queryset, QuerySet):
             queryset = queryset.all()
-            queryset = queryset.filter(recipe_version=recipe_version)
+            queryset = queryset.filter() # removed recipe_version=recipe_version
 
-        return queryset
+        return queryset.order_by('-id')
 
     def perform_create(self, serializer):
         serializer.save(chef=self.request.user)
@@ -112,25 +148,6 @@ class RecipeViewSet(ModelViewSet):
     #     return RecipeVariationDetailSerializer
 
 
-# For recipes-list/
-class RecipeListView(ListCreateAPIView):
-    queryset = Recipe.objects.all()
-    serializer_class = RecipeListSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
-
-    def get_queryset(self):
-        search_term = self.request.query_params.get("search")
-        if search_term is not None:
-            results = RecipeVariation.objects.filter(
-                Q(title__icontains=search_term) 
-            )
-            results.order_by('-id')
-
-        else:
-            results = RecipeVariation.objects.all().order_by('-id')
-        return results.order_by('-id')
-
-
 # for all-recipes/ search
 class AllRecipeVariationViewSet(ModelViewSet):
     queryset          = RecipeVariation.objects.all()
@@ -139,9 +156,9 @@ class AllRecipeVariationViewSet(ModelViewSet):
 
     # for taggit - not sure if this is needed here
     def index(request):
-        recipe_versions =RecipeVariation.get.prefetch_related('tags').all()
+        # recipe_versions =RecipeVariation.get.prefetch_related('tags').all()
         tags = Tag.objects.all()
-        context = {'recipe_versions':recipe_versions, 'tags': tags}
+        context = {'tags': tags} # removed 'recipe_versions':recipe_versions
         return render(request, 'api/index.html', context) # likely need to modify this as this is going to a page F/E isn't doing?!
 
     def get_queryset(self):

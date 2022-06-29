@@ -39,6 +39,37 @@ class UserCreateSerializer(DjoserUserCreateSerializer):
         )
 
 
+class RecipeListSerializer(serializers.ModelSerializer):
+    chef         = serializers.SlugRelatedField(read_only=True, slug_field="username")
+
+    class Meta:
+        model = Recipe
+        fields = [
+        'id',
+        'title',
+        'description',
+        'chef',
+        'created_at',
+        ]
+
+
+class RecipeListDetailSerializer(serializers.ModelSerializer):
+    chef              = serializers.SlugRelatedField(read_only=True, slug_field="username")
+    recipe  = serializers.SlugRelatedField(many=True, read_only=True, slug_field='recipes') #shows up but is null -> will test by adding RecVar
+
+    class Meta:
+        model = Recipe
+        fields = [
+        'id',
+        'title',
+        'description',
+        'chef',
+        'created_at',
+        'recipe',
+        ]
+
+
+
 class RecipeVariationSerializer (serializers.ModelSerializer):
     chef         = serializers.SlugRelatedField(read_only=True, slug_field="username")
     notes        = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
@@ -112,18 +143,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             'created_at',
             'complete',  
         ]
-
-
-class RecipeListSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Recipe
-        fields = [
-        'id',
-        'title',
-        'created_at'
-        ]
-
 
 
 #for taggit

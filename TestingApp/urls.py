@@ -22,7 +22,7 @@ from api import views as api_views
 
 router = DefaultRouter()
 router.register('users',api_views.UserViewSet, 'users')
-router.register('recipes',api_views.RecipeVariationViewSet)
+# router.register('recipes',api_views.RecipeListView)
 router.register('recipes/(?P<recipe_pk>[^/.]+)/notes', api_views.NoteViewSet)
 router.register('recipes/(?P<recipe_pk>[^/.]+)/feedback', api_views.TasterFeedbackView)
 router.register('recipes/(?P<recipe_pk>[^/.]+)/new-variation', api_views.RecipeViewSet)
@@ -37,10 +37,19 @@ urlpatterns = [
     path('auth/', include('djoser.urls.jwt')),
     path('auth/', include('djoser.urls.authtoken')),
     path('api/', include(router.urls)),
+
+    path('api/recipes', api_views.RecipeListView.as_view(), name='recipes-list'),
+    path('api/recipes/', api_views.RecipeListView.as_view(), name='recipes-list'),
+    path('api/recipes/<int:pk>', api_views.RecipeListDetailView.as_view(), name='recipes-list'),
+    path('api/recipes/<int:pk>/', api_views.RecipeListDetailView.as_view(), name='recipes-list'),
+
     path('api/recipe-list/', api_views.RecipeListAPIView.as_view(), name='taggit-recipe-list'),
 
-    path('api/recipes-list/', api_views.RecipeListView.as_view(), name='recipes-list'),
-    path('api/recipes-list/<int:pk>/', api_views.RecipeListView.as_view(), name='recipes-list'),
+
+    # Shouldn't need due to addition of lines 41 and 42
+    # path('api/recipes-list/', api_views.RecipeListView.as_view(), name='recipes-list'),
+    # path('api/recipes-list/<int:pk>/', api_views.RecipeListView.as_view(), name='recipes-list'),
+
 
     # path('api/all_notes/', api_views.AllNoteViewSet.as_view(), name='all-answers-list'),
 ]

@@ -9,28 +9,30 @@ All endpoints begin with `https://bake-it-till-you-make-it.herokuapp.com/api/`
 
 NOTE: API Root is /api/
 
-| Method | Endpoint                                                           | Description                                 |
-| ------ | ------------------------------------------------------------------ | ------------------------------------------- |
-| POST   | [/users/](#create-a-new-user)                                      | Create a new user                           |
-| POST   | [/auth/token/login/](#login-user)                                  | Login user (remove /api from url)           |
-| GET    | [/users/me/](#users-info)                                          | User's info                                 |
-| POST   | [/auth/token/logout/](#logout-user)                                | Logout user (remove /api from url)          |
-| GET    | [/recipes/](#list-of-recipes-logged-in-user)                       | List all logged in user created recipes     |
-| GET    | [/all_recipes/](#list-of-all-recipes)                              | List all recipes for all users              |
-| GET    | [/all_recipes?search=<search_term>](#search-recipes)               | Search recipes (limited to one search term) |
-| POST   | [/recipes/](#create-a-new-recipe-for-user)                         | Create a new recipe                         |
-| GET    | [/recipes/{id}/](#details-for-a-specific-recipe)                   | Details for a specific recipe               |
-| PUT    | [/recipes/{id}/](#update-an-existing-recipe)                       | Update an existing recipe                   |
-| PATCH  | [/recipes/{id}/](#update-part-of-an-existing-recipe)               | Update part of an existing recipe           |
-| PATCH  | [/recipes/{id}/](#add-a-tag-to-an-existing-recipe)                 | Add a tag to an existing recipe             |
-| DELETE | [/recipes/{id}/](#delete-recipe)                                   | Delete an existing recipe                   |
-| POST   | [/recipes/{id}/notes/](#create-a-new-note-for-a-recipe)            | Create a note for a recipe                  |
-| GET    | [/recipes/{id}/notes/](#list-of-notes-for-a-recipe)                | List of notes for a recipe                  |
-| GET    | [/all_notes?search=<search_term>](#search-notes)                   | Search notes (limited to one search term)   |
-| PUT    | [/recipes/{id}/notes/{id}/](#update-an-existing-note-for-a-recipe) | Update a specific note for a recipe         |
-| PATCH  | [/recipes/{id}/notes/{id}/](#update-part-of-a-specific-note)       | Update an existing note                     |
-| DELETE | [/recipes/{id}/notes/{id}/](#delete-a-specific-note-of-a-recipe)   | Delete part of an existing note             |
-| POST   | [/recipes/{id}/feedback/](#give-feedback-for-a-new-recipe)         | Give feedback for a new recipe              |
+| Method | Endpoint                                                              | Description                                 |
+| ------ | --------------------------------------------------------------------- | ------------------------------------------- |
+| POST   | [/users/](#create-a-new-user)                                         | Create a new user                           |
+| POST   | [/auth/token/login/](#login-user)                                     | Login user (remove /api from url)           |
+| GET    | [/users/me/](#users-info)                                             | User's info                                 |
+| POST   | [/auth/token/logout/](#logout-user)                                   | Logout user (remove /api from url)          |
+| GET    | [/recipes/](#list-of-recipes-logged-in-user)                          | List all logged in user created recipes     |
+| GET    | [/all_recipes/](#list-of-all-recipes)                                 | List all recipes for all users              |
+| GET    | [/all_recipes?search=<search_term>](#search-recipes)                  | Search recipes (limited to one search term) |
+| POST   | [/recipes/](#start-a-new-recipe-for-user)                             | Start a new recipe  (have to create below)  |
+| GET    | [/recipes/{id}/](#details-for-a-specific-recipe)                      | Details for a specific recipe (have to create below) |
+| POST   | [/recipes/{id}/recipe-variation/](#create-a-new-recipe-for-user)      | Create a new recipe variation (have to update below) |
+| GET    | [/recipes/{id}/recipe-variation/{id}/](#details-for-a-specific-recipe)| Details for a specific recipe variation (have to update below) |
+| PUT    | [/recipes/{id}/](#update-an-existing-recipe)                          | Update an existing recipe                   |
+| PATCH  | [/recipes/{id}/](#update-part-of-an-existing-recipe)                  | Update part of an existing recipe           |
+| PATCH  | [/recipes/{id}/](#add-a-tag-to-an-existing-recipe)                    | Add a tag to an existing recipe             |
+| DELETE | [/recipes/{id}/](#delete-recipe)                                      | Delete an existing recipe                   |
+| POST   | [/recipes/{id}/notes/](#create-a-new-note-for-a-recipe)               | Create a note for a recipe                  |
+| GET    | [/recipes/{id}/notes/](#list-of-notes-for-a-recipe)                   | List of notes for a recipe                  |
+| GET    | [/all_notes?search=<search_term>](#search-notes)                      | Search notes (limited to one search term)   |
+| PUT    | [/recipes/{id}/notes/{id}/](#update-an-existing-note-for-a-recipe)    | Update a specific note for a recipe         |
+| PATCH  | [/recipes/{id}/notes/{id}/](#update-part-of-a-specific-note)          | Update an existing note                     |
+| DELETE | [/recipes/{id}/notes/{id}/](#delete-a-specific-note-of-a-recipe)      | Delete part of an existing note             |
+| POST   | [/recipes/{id}/feedback/](#give-feedback-for-a-new-recipe)            | Give feedback for a new recipe              |
 
 
 ## Create a new user

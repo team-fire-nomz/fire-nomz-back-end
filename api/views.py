@@ -88,7 +88,8 @@ class RecipeVariationViewSet(ModelViewSet):
             )
 
     def perform_create(self, serializer):
-        serializer.save(chef=self.request.user)
+        recipe_version = get_object_or_404(Recipe, pk=self.kwargs["recipe_pk"])
+        serializer.save(chef=self.request.user, recipe_version=recipe_version)
 
     def perform_destroy(self, instance):
         if self.request.user  == instance.chef:

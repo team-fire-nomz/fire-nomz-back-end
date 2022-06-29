@@ -55,8 +55,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
 
 class RecipeListDetailSerializer(serializers.ModelSerializer):
     chef              = serializers.SlugRelatedField(read_only=True, slug_field="username")
-    # recipe  = serializers.SlugRelatedField(many=True, read_only=True, slug_field='recipes') #shows up but is null -> will test by adding RecVar
-    # with null removed, the above gives not iterable error -> need other way to pull data
+
 
     class Meta:
         model = Recipe
@@ -66,7 +65,7 @@ class RecipeListDetailSerializer(serializers.ModelSerializer):
         'description',
         'chef',
         'created_at',
-        # 'recipe',
+        'recipe_variations',
         ]
 
 

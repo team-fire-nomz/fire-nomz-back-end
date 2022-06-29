@@ -46,8 +46,7 @@ class RecipeListView(ListCreateAPIView):
         return results.order_by('-id')
 
     def perform_create(self, serializer):
-        recipe_id = get_object_or_404(Recipe, pk=self.kwargs["recipe_pk"])
-        serializer.save(chef=self.request.user, recipe_id=recipe_id)
+        serializer.save(chef=self.request.user)
 
 
 # For recipes-list/ & now recipes/pk

@@ -34,7 +34,7 @@ class RecipeVariation(models.Model):
     successful_variation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipe_variations', max_length=100)
-    variation_number = models.ForeignKey('RecipeVariation', on_delete=models.CASCADE, related_name='recipe_variations', max_length=255,)
+    variation_number = models.ForeignKey('Recipe', on_delete=models.CASCADE, related_name='recipe_variations', max_length=255,)
     
     tags = TaggableManager(blank=True)
 

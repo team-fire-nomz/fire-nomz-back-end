@@ -164,17 +164,17 @@ GET Response note: In the below example, there is no data for tags nor notes.
 200 OK
 
 {
-  "id": 1,
-  "title": "Chocolate Pie",
-  "ingredients": "Graham cracker crust, sugar, corn starch, salt, milk, 4 egg yolks, bittersweet chocolate, vanilla, butter, whipped cream",
-  "recipe_steps": "Make pudding then pour into pie crust. Chill for 4 hours in the refridgerator.",
-  "image": null,
-  "ready_for_feedback": false,
-  "successful_variation": false,
-  "chef": "Eric",
-  "created_at": "06/17/22 22:10",
-  "tags": [],
-  "notes": []
+	"id": 1,
+	"title": "Chocolate Pie",
+	"ingredients": "Graham cracker crust, sugar, corn starch, salt, milk, 4 egg yolks, bittersweet chocolate, vanilla, butter, whipped cream",
+	"recipe_steps": "Make pudding then pour into pie crust. Chill for 4 hours in the refridgerator.",
+	"image": null,
+	"ready_for_feedback": false,
+	"successful_variation": false,
+	"chef": "Eric",
+	"created_at": "06/17/22 22:10",
+	"tags": [],
+	"notes": []
 },
 {
 	"id": 2,

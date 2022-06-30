@@ -64,6 +64,7 @@ class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerialize
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
     notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
     ingredients = serializers.JSONField()
+    recipe_steps =serializers.JSONField()
     tags = TagListSerializerField()
 
     class Meta:

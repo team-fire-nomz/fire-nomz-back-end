@@ -142,14 +142,14 @@ class TasterFeedbackSerializer(TaggitSerializer, serializers.ModelSerializer):
         model = TasterFeedback
         fields = [
             'id',
-            'created_at',
-            # 'tester',
             'rating',
             'saltiness',
             'sweetness',
             'portion',
             'texture',
             'additional_comment',
+            # 'tester',
+            'created_at',
         ]
 
 

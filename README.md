@@ -196,12 +196,12 @@ GET Response note: In the below example, there is no data for tags nor notes.
 
 Returns list of all recipes for all users. 
 
-Requirement: user must be logged in.
+User can be anonymous / guest or logged in.
 
 ### Request
 
 ```json
-GET /recipes/
+GET /all_recipes/
 ```
 
 ### Response
@@ -436,6 +436,9 @@ PUT /recipes/id/
 	"title": "Cheesecake!!",
 	"ingredients": "Graham cracker crumbs, cream cheese, sugar, butter, salt, eggs",
 	"recipe_steps": "Add ingreds, bake at 325 degrees F for 1 hour. Let cool for 20 mins.. then serve!",
+	"image": null,
+	"ready_for_feedback": false,
+	"successful_variation": false,
 	"chef": "Eric",
 	"created_at": "06/22/2022 15:45",
 	"tags": [],
@@ -492,6 +495,9 @@ PATCH /recipes/id/
 	"title": "Cheesecake!!",
 	"ingredients": "Graham cracker crumbs, eggs, butter, salt, brown sugar, cream cheese, sugar.",
 	"recipe_steps": "Add ingreds, bake at 325 degrees F for 1 hour. Let cool for 20 mins.. then serve!",
+	"image": null,
+	"ready_for_feedback": false,
+	"successful_variation": false,
 	"chef": "Eric",
 	"created_at": "6/22/2022 15:45",
 	"tags": [],
@@ -538,6 +544,9 @@ PATCH /recipes/id/
 	"title": "Cheesecake!!",
 	"ingredients": "Graham cracker crumbs, eggs, butter, salt, brown sugar, cream cheese, sugar.",
 	"recipe_steps": "Add ingreds, bake at 325 degrees F for 1 hour. Let cool for 20 mins.. then serve!",
+	"image": null,
+	"ready_for_feedback": false,
+	"successful_variation": false,
 	"chef": "Eric",
 	"created_at": "6/22/2022 15:45",
 	"tags": [
@@ -580,6 +589,7 @@ A successful deletion returns:
 ```
 
 If another logged in user attempts to delete a recipe that is not theirs:
+
 ```json
 404 Not Found
 
@@ -589,6 +599,7 @@ If another logged in user attempts to delete a recipe that is not theirs:
 ```
 
 If anonymous / guest attempts to delete a recipe:
+
 ```json
 401 Unauthorized
 
@@ -630,6 +641,8 @@ POST /recipes/id/notes/
 ```
 
 ## List of notes for a recipe
+
+Requirement: user must be logged in.
 
 ### Request
 
@@ -812,6 +825,7 @@ A successful deletion returns:
 ```
 
 If another logged in user attempts to delete a note that is not theirs:
+
 ```json
 404 Not Found
 
@@ -821,6 +835,7 @@ If another logged in user attempts to delete a note that is not theirs:
 ```
 
 If anonymous / guest attempts to delete a note:
+
 ```json
 401 Unauthorized
 
@@ -832,11 +847,13 @@ If anonymous / guest attempts to delete a note:
 
 ## Give feedback for a new recipe 
 
-Requirement: user must be logged in. 
+User can be anonymous / guest or logged in.
 
 ### Request
 
 Required fields: Rating (options are: #'s 1 to 5) | Saltiness, Sweetness and Portion (options are: Too Little, Just Right, Too Much) | Texture (options are: Yes or No). 
+
+Optional field: additional_comment
 
 Required in URL: recipe id.
 

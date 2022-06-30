@@ -29,7 +29,7 @@ class UserViewSet(DjoserUserViewSet):
 
 
 class RecipeVersionViewSet(ModelViewSet):
-    queryset          = RecipeVersion.objects.all()
+    queryset          = RecipeVersion.objects.all().order_by('-id')
     serializer_class  = RecipeVersionSerializer
     permission_classes = (RecipeIsChefOrReadOnly,)
 
@@ -46,9 +46,7 @@ class RecipeVersionViewSet(ModelViewSet):
             queryset = queryset.all()
             if self.request.user.is_authenticated:
                 queryset = queryset.filter(chef=self.request.user)
-        return queryset.annotate(
-                total_answers=Count('notes')
-            )
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(chef=self.request.user)
@@ -197,7 +195,7 @@ class TasterFeedbackView(ModelViewSet):
             instance.delete()
 
     def perform_update(self,serializer):
-        if self.request.user == serializer.instance.tester:
+        # if self.request.user == serializer.instance.tester:
             serializer.save()
 
 
@@ -226,7 +224,7 @@ class TasterFeedbackDetailView(ModelViewSet):
             instance.delete()
 
     def perform_update(self,serializer):
-        if self.request.user == serializer.instance.tester:
+        # if self.request.user == serializer.instance.tester:
             serializer.save()
 
 

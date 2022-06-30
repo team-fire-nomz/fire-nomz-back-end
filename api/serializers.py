@@ -39,7 +39,7 @@ class UserCreateSerializer(DjoserUserCreateSerializer):
 
 class RecipeVersionSerializer (serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
-    # notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
+    notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note') #this is needed or notes is required during a POST
     ingredients = serializers.JSONField()
     recipe_steps =serializers.JSONField() # test tomorrow!!
     
@@ -62,9 +62,10 @@ class RecipeVersionSerializer (serializers.ModelSerializer):
 
 class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
-    # notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note') -> this would show title.. so don't need
+    notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note') # this would show title.. so don't need -> may need as it's required if commented out
     # taster_feedbacks = serializers.SlugRelatedField(many=True, read_only=True, slug_field='test_recipe') -> can't serialize data
     ingredients = serializers.JSONField()
+    recipe_steps =serializers.JSONField()
     tags = TagListSerializerField()
 
     class Meta:
@@ -130,7 +131,7 @@ class NoteDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
 
 
 class TasterFeedbackSerializer(TaggitSerializer, serializers.ModelSerializer):
-    taster = serializers.SlugRelatedField(read_only=True, slug_field="username")
+    taster_id = serializers.SlugRelatedField(read_only=True, allow_null=True, slug_field="username")
 
     # rating = serializers.MultipleChoiceField(choices = TasterFeedback.RADIO)
     # saltiness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
@@ -144,7 +145,7 @@ class TasterFeedbackSerializer(TaggitSerializer, serializers.ModelSerializer):
         fields = [
             'id',
             'created_at',
-            'taster',
+            'taster_id',
             'rating',
             'saltiness',
             'sweetness',
@@ -155,7 +156,7 @@ class TasterFeedbackSerializer(TaggitSerializer, serializers.ModelSerializer):
 
 
 class TasterFeedbackDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
-    taster = serializers.SlugRelatedField(read_only=True, slug_field="username")
+    taster_id = serializers.SlugRelatedField(read_only=True, allow_null=True, slug_field="username")
     # test_recipe = serializers.PrimaryKeyRelatedField(read_only=True)
     
     # rating = serializers.MultipleChoiceField(choices = TasterFeedback.RADIO)
@@ -170,8 +171,8 @@ class TasterFeedbackDetailSerializer(TaggitSerializer, serializers.ModelSerializ
         fields = [
             'id',
             'created_at',
-            'taster',
-            'test_recipe',
+            'taster_id',
+            'test_recipe', # PK of RecipeVversion
             'rating',
             'saltiness',
             'sweetness',

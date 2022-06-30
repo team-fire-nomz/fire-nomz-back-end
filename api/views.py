@@ -105,7 +105,7 @@ class AllRecipeVersionViewSet(ModelViewSet):
 
 
 class NoteViewSet(ModelViewSet):
-    queryset = Note.objects.all()
+    queryset = Note.objects.all().order_by('-id')
     serializer_class = NoteSerializer
     permission_classes = [IsChefOrReadOnly]
 
@@ -161,7 +161,7 @@ class AllNoteViewSet(ModelViewSet):
 
 
 class TasterFeedbackView(ModelViewSet):
-    queryset = TasterFeedback.objects.all().order_by('created_at')
+    queryset = TasterFeedback.objects.all().order_by('-id')
     serializer_class = TasterFeedbackSerializer
     permission_classes = (AllowAny,)
 
@@ -177,7 +177,7 @@ class TasterFeedbackView(ModelViewSet):
         if self.request.user.is_authenticated:
             serializer.save(taster=self.request.user, test_recipe=test_recipe)
         else:
-            serializer.save(test_recipe=test_recipe) #expectiation is this allows a guest to post.. but still getting auth req msg
+            serializer.save(taster=self.request.guest, test_recipe=test_recipe) #expectiation is this allows a guest to post..
 
     def perform_destroy(self, instance):
         if self.request.user  == instance.taster:
@@ -189,7 +189,7 @@ class TasterFeedbackView(ModelViewSet):
 
 
 class TasterFeedbackDetailView(ModelViewSet):
-    queryset = TasterFeedback.objects.all().order_by('created_at')
+    queryset = TasterFeedback.objects.all().order_by('-id')
     serializer_class = TasterFeedbackDetailSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
 

@@ -177,14 +177,14 @@ class TasterFeedbackView(ModelViewSet):
         if self.request.user.is_authenticated:
             serializer.save(taster=self.request.user, test_recipe=test_recipe)
         else:
-            serializer.save(taster=self.request.guest, test_recipe=test_recipe) #expectiation is this allows a guest to post..
+            serializer.save(test_recipe=test_recipe) #expectiation is this allows a guest to post..
 
     def perform_destroy(self, instance):
-        if self.request.user  == instance.taster:
+        # if self.request.user  == instance.taster:
             instance.delete()
 
     def perform_update(self,serializer):
-        if self.request.user == serializer.instance.taster:
+        # if self.request.user == serializer.instance.taster:
             serializer.save()
 
 

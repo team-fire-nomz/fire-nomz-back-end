@@ -73,7 +73,6 @@ class RecipeVersionViewSet(ModelViewSet):
         return RecipeVersionDetailSerializer
 
 
-
 # for recipe search
 class AllRecipeVersionViewSet(ModelViewSet):
     queryset          = RecipeVersion.objects.all()
@@ -189,23 +188,23 @@ class TasterFeedbackView(ModelViewSet):
     def perform_create(self, serializer):
         test_recipe = get_object_or_404(RecipeVersion, pk=self.kwargs["recipe_pk"])
         if self.request.user.is_authenticated:
-            serializer.save(taster=self.request.user, test_recipe=test_recipe)
+            serializer.save(tester=self.request.user, test_recipe=test_recipe)
         else:
             serializer.save(test_recipe=test_recipe)
 
     def perform_destroy(self, instance):
-        if self.request.user  == instance.taster:
+        if self.request.user  == instance.tester:
             instance.delete()
 
     def perform_update(self,serializer):
-        if self.request.user == serializer.instance.taster:
+        if self.request.user == serializer.instance.tester:
             serializer.save()
 
 
 class TasterFeedbackDetailView(ModelViewSet):
     queryset = TasterFeedback.objects.all().order_by('-created_at')
     serializer_class = TasterFeedbackDetailSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (AllowAny,)
 
     def get_queryset(self):
         assert self.queryset is not None, (
@@ -223,14 +222,15 @@ class TasterFeedbackDetailView(ModelViewSet):
         return queryset
 
     def perform_destroy(self, instance):
-        if self.request.user  == instance.taster:
+        if self.request.user  == instance.tester:
             instance.delete()
 
     def perform_update(self,serializer):
-        if self.request.user == serializer.instance.taster:
+        if self.request.user == serializer.instance.tester:
             serializer.save()
 
 
+# For Taggit
 class RecipeListAPIView(ListAPIView):
         queryset = RecipeVersion.objects.all()
         serializer_class = RecipeVersionSerializer

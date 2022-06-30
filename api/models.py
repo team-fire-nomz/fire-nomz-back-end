@@ -99,7 +99,7 @@ class TasterFeedback(models.Model):
     additional_comment = models.CharField(max_length=200,blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     test_recipe = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='taster_feedbacks', max_length = 255)
-    taster = models.ForeignKey('User', on_delete=models.CASCADE, related_name='taster_feedbacks', max_length=50)
+    tester = models.ForeignKey('User', on_delete=models.CASCADE, related_name='taster_feedbacks', null=True, max_length=50)
 
     class Meta:
         verbose_name = 'TasterFeedback'

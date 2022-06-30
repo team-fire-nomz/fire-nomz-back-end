@@ -12,6 +12,7 @@ from .permissions import IsChefOrReadOnly, RecipeIsChefOrReadOnly
 from django.db.models import Q
 from taggit.models import Tag
 from django.db.models.query import QuerySet
+from rest_framework.permissions import AllowAny
 
 
 class UserViewSet(DjoserUserViewSet):
@@ -159,9 +160,24 @@ class AllNoteViewSet(ModelViewSet):
 
 
 class TasterFeedbackView(ModelViewSet):
-    queryset = TasterFeedback.objects.all().order_by('created_at')
+    queryset = TasterFeedback.objects.all().order_by('-created_at')
     serializer_class = TasterFeedbackSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (AllowAny,)
+
+    def get_queryset(self):
+        assert self.queryset is not None, (
+            "'%s' should either include a `queryset` attribute, "
+            "or override the `get_queryset()` method."
+            % self.__class__.__name__
+        )
+
+        queryset = self.queryset
+        test_recipe = get_object_or_404(RecipeVersion, pk=self.kwargs["recipe_pk"])
+        if isinstance(queryset, QuerySet):
+            queryset = queryset.all()
+            queryset = queryset.filter(test_recipe=test_recipe)
+
+        return queryset
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -173,42 +189,45 @@ class TasterFeedbackView(ModelViewSet):
     def perform_create(self, serializer):
         test_recipe = get_object_or_404(RecipeVersion, pk=self.kwargs["recipe_pk"])
         if self.request.user.is_authenticated:
-            serializer.save(tester=self.request.user, test_recipe=test_recipe)
+            serializer.save(taster=self.request.user, test_recipe=test_recipe)
+        else:
+            serializer.save(test_recipe=test_recipe)
 
     def perform_destroy(self, instance):
-        if self.request.user  == instance.tester:
+        if self.request.user  == instance.taster:
             instance.delete()
 
     def perform_update(self,serializer):
-        if self.request.user == serializer.instance.tester:
+        if self.request.user == serializer.instance.taster:
             serializer.save()
 
 
 class TasterFeedbackDetailView(ModelViewSet):
-    queryset = TasterFeedback.objects.all().order_by('created_at')
+    queryset = TasterFeedback.objects.all().order_by('-created_at')
     serializer_class = TasterFeedbackDetailSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
-        pass
-        # assert self.queryset is not None, (
-        #     "'%s' should either include a `queryset` attribute, "
-        #     "or override the `get_queryset()` method."
-        #     % self.__class__.__name__
-        # )
+        assert self.queryset is not None, (
+            "'%s' should either include a `queryset` attribute, "
+            "or override the `get_queryset()` method."
+            % self.__class__.__name__
+        )
 
-        # queryset = self.queryset
-        # if isinstance(queryset, QuerySet):
-        #     # Ensure queryset is re-evaluated on each request.
-        #     queryset = queryset.all()
-        # return queryset
+        queryset = self.queryset
+        test_recipe = get_object_or_404(RecipeVersion, pk=self.kwargs["recipe_pk"])
+        if isinstance(queryset, QuerySet):
+            queryset = queryset.all()
+            queryset = queryset.filter(test_recipe=test_recipe)
+
+        return queryset
 
     def perform_destroy(self, instance):
-        if self.request.user  == instance.tester:
+        if self.request.user  == instance.taster:
             instance.delete()
 
     def perform_update(self,serializer):
-        if self.request.user == serializer.instance.tester:
+        if self.request.user == serializer.instance.taster:
             serializer.save()
 
 

@@ -12,6 +12,8 @@ from .permissions import IsChefOrReadOnly, RecipeIsChefOrReadOnly
 from django.db.models import Q
 from taggit.models import Tag
 from django.db.models.query import QuerySet
+from rest_framework.permissions import AllowAny
+from rest_framework.views import APIView
 
 
 class UserViewSet(DjoserUserViewSet):
@@ -161,6 +163,7 @@ class AllNoteViewSet(ModelViewSet):
 class TasterFeedbackView(ModelViewSet):
     queryset = TasterFeedback.objects.all().order_by('created_at')
     serializer_class = TasterFeedbackSerializer
+    permission_classes = (AllowAny,)
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -172,16 +175,16 @@ class TasterFeedbackView(ModelViewSet):
     def perform_create(self, serializer):
         test_recipe = get_object_or_404(RecipeVersion, pk=self.kwargs["recipe_pk"])
         if self.request.user.is_authenticated:
-            serializer.save(tester=self.request.user, test_recipe=test_recipe)
+            serializer.save(taster=self.request.user, test_recipe=test_recipe)
         else:
             serializer.save(test_recipe=test_recipe) #expectiation is this allows a guest to post.. but still getting auth req msg
 
     def perform_destroy(self, instance):
-        if self.request.user  == instance.tester:
+        if self.request.user  == instance.taster:
             instance.delete()
 
     def perform_update(self,serializer):
-        if self.request.user == serializer.instance.tester:
+        if self.request.user == serializer.instance.taster:
             serializer.save()
 
 
@@ -205,11 +208,11 @@ class TasterFeedbackDetailView(ModelViewSet):
         # return queryset
 
     def perform_destroy(self, instance):
-        if self.request.user  == instance.tester:
+        if self.request.user  == instance.taster:
             instance.delete()
 
     def perform_update(self,serializer):
-        if self.request.user == serializer.instance.tester:
+        if self.request.user == serializer.instance.taster:
             serializer.save()
 
 

@@ -59,7 +59,7 @@ class RecipeVersionSerializer (serializers.ModelSerializer):
             'notes',
             ]
 
-# have to work on
+
 class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
     # notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note') -> this would show title.. so don't need
@@ -144,7 +144,7 @@ class TasterFeedbackSerializer(TaggitSerializer, serializers.ModelSerializer):
         fields = [
             'id',
             'created_at',
-            # 'taster',
+            'taster',
             'rating',
             'saltiness',
             'sweetness',
@@ -156,7 +156,8 @@ class TasterFeedbackSerializer(TaggitSerializer, serializers.ModelSerializer):
 
 class TasterFeedbackDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
     taster = serializers.SlugRelatedField(read_only=True, slug_field="username")
-
+    # test_recipe = serializers.PrimaryKeyRelatedField(read_only=True)
+    
     # rating = serializers.MultipleChoiceField(choices = TasterFeedback.RADIO)
     # saltiness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
     # sweetness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)

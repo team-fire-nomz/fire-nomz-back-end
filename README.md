@@ -868,7 +868,7 @@ POST /recipes/id/feedback/
 		"portion": "Just Right",
 		"texture": "No",
 		"additional_comment": "It's delish!",
-		"tester": "Eric",
+		"taster": "Eric",
 		"created_at": "06/25/2022 22:30"
 	}
 ]

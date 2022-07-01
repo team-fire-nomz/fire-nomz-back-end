@@ -313,7 +313,7 @@ Required fields: title, ingredients, recipe_steps
 
 Optional field: tags
 
-## Note: ingredients can be entered as a a single string or an array of strings:
+### Note: ingredients and recipe_steps can be both entered as either a single string or an array of strings - ex. ingredients:
 ```json
 "ingredients": "Flour, sugar, eggs, butter, and cocoa",
 ```

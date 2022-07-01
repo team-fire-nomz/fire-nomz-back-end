@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.forms import HiddenInput
 from taggit.managers import TaggableManager
+from django.contrib.postgres.fields import ArrayField
 
 class User(AbstractUser):
     location = models.CharField(max_length=100, blank=True, null=True)
@@ -17,8 +18,8 @@ class User(AbstractUser):
 class RecipeVersion(models.Model):
     title = models.CharField(max_length=255)
     version_number = models.CharField(max_length=3)
-    ingredients = models.TextField()
-    recipe_steps = models.TextField()
+    ingredients = ArrayField(models.TextField())
+    recipe_steps = ArrayField(models.TextField())
     image = models.ImageField(blank=True, null=True)
     ready_for_feedback = models.BooleanField(default=False)
     successful_variation = models.BooleanField(default=False)

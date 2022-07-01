@@ -40,8 +40,8 @@ class UserCreateSerializer(DjoserUserCreateSerializer):
 class RecipeVersionSerializer (serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
     notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
-    ingredients = serializers.JSONField()
-    recipe_steps =serializers.JSONField() # test tomorrow!!
+    ingredients = serializers.ListField(child=serializers.CharField())
+    recipe_steps =serializers.ListField(child=serializers.CharField()) # test tomorrow!!
     
     class Meta: 
         model  = RecipeVersion
@@ -63,8 +63,8 @@ class RecipeVersionSerializer (serializers.ModelSerializer):
 class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
     notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
-    ingredients = serializers.JSONField()
-    recipe_steps =serializers.JSONField()
+    ingredients = serializers.ListField(child=serializers.CharField())
+    recipe_steps =serializers.ListField(child=serializers.CharField())
     tags = TagListSerializerField()
 
     class Meta:

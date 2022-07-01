@@ -313,11 +313,11 @@ Required fields: title, ingredients, recipe_steps
 
 Optional field: tags
 
-#### Note: ingredients and recipe_steps can be both entered as either a single string or an array of strings.
+#### Note: ingredients and recipe_steps can be both entered as either a single string or an array of strings AND they both MUST be enclosed within square [] brackets! 
 
 ex. single string
 ```json
-"ingredients": "Flour, sugar, eggs, butter, and cocoa",
+"ingredients": ["Flour, sugar, eggs, butter, and cocoa"],
 ```
 ex. array of strings
 ```json
@@ -329,8 +329,8 @@ POST /recipes/
 
 {
 	"title": "Brownies",
-	"ingredients": "Flour, sugar, eggs, butter, and cocoa",
-	"recipe_steps": "Some butter, stir in the sugar, eggs, flour, and cocoa powder and bake it up.",
+	"ingredients": ["Flour, sugar, eggs, butter, and cocoa"],
+	"recipe_steps": ["Some butter, stir in the sugar, eggs, flour, and cocoa powder and bake it up."],
 }
 ```
 
@@ -342,8 +342,12 @@ POST /recipes/
 {
 	"id": 2,
 	"title": "Brownies",
-	"ingredients": "Flour, sugar, eggs, butter, and cocoa",
-	"recipe_steps": "Some butter, stir in the sugar, eggs, flour, and cocoa powder and bake it up.",
+	"ingredients": [
+		"Flour, sugar, eggs, butter, and cocoa"
+		],
+	"recipe_steps": [
+		"Some butter, stir in the sugar, eggs, flour, and cocoa powder and bake it up."
+		],
 	"image": null,
 	"ready_for_feedback": false,
 	"successful_variation": false,
@@ -362,6 +366,17 @@ If missing a required field, ex. recipe_steps:
 {
 	"recipe_steps": [
 		"This field is required."
+	]
+}
+```
+If the square brackets are not used, ex recipe_steps:
+
+```json
+400 Bad Request
+
+{
+	"recipe_steps": [
+		"Expected a list of items but got type \"str\"."
 	]
 }
 ```
@@ -397,8 +412,19 @@ GET Response note: In the below example, there are no notes for tags nor notes.
 {
 	"id": 2,
 	"title": "Cheesecake",
-	"ingredients": "['graham cracker crumbs', 'cream cheese', 'sugar', 'brown sugar', 'butter', 'sour cream', 'salt', 'eggs']",
-	"recipe_steps": "add ingredients bake at 325 degrees F for 1 hour",
+	"ingredients": [
+		"graham cracker crumbs", 
+		"cream cheese", 
+		"sugar", 
+		"brown sugar", 
+		"butter", 
+		"sour cream", 
+		"salt", 
+		"eggs"
+		],
+	"recipe_steps": [
+		"add ingredients bake at 325 degrees F for 1 hour"
+		],
 	"image": null,
 	"ready_for_feedback": false,
 	"successful_variation": false,
@@ -423,8 +449,8 @@ PUT /recipes/id/
 
 {
 	"title": "Cheesecake!!",
-	"ingredients": "Graham cracker crumbs, cream cheese, sugar, butter, salt, eggs",
-	"recipe_steps": "Add ingreds, bake at 325 degrees F for 1 hour. Let cool for 20 mins.. then serve!"
+	"ingredients": ["Graham cracker crumbs, cream cheese, sugar, butter, salt, eggs"],
+	"recipe_steps": ["Add ingreds, bake at 325 degrees F for 1 hour. Let cool for 20 mins.. then serve!"]
 }
 ```
 
@@ -436,8 +462,12 @@ PUT /recipes/id/
 {
 	"id": 2,
 	"title": "Cheesecake!!",
-	"ingredients": "Graham cracker crumbs, cream cheese, sugar, butter, salt, eggs",
-	"recipe_steps": "Add ingreds, bake at 325 degrees F for 1 hour. Let cool for 20 mins.. then serve!",
+	"ingredients": [
+		"Graham cracker crumbs, cream cheese, sugar, butter, salt, eggs"
+		],
+	"recipe_steps": [
+		"Add ingreds, bake at 325 degrees F for 1 hour. Let cool for 20 mins.. then serve!"
+		],
 	"image": null,
 	"ready_for_feedback": false,
 	"successful_variation": false,
@@ -456,6 +486,18 @@ If missing a required field, ex. ingredients:
 {
 	"ingredients": [
 		"This field is required."
+	]
+}
+```
+
+If the square brackets are not used, ex recipe_steps:
+
+```json
+400 Bad Request
+
+{
+	"recipe_steps": [
+		"Expected a list of items but got type \"str\"."
 	]
 }
 ```
@@ -483,7 +525,7 @@ Required fields: title and/or ingredients and/or recipe_steps
 PATCH /recipes/id/
 
 {
-	"ingredients": "Graham cracker crumbs, eggs, butter, salt, brown sugar, cream cheese, sugar."
+	"ingredients": ["Graham cracker crumbs, eggs, butter, salt, brown sugar, cream cheese, sugar."]
 }
 ```
 
@@ -495,8 +537,12 @@ PATCH /recipes/id/
 {
 	"id": 2,
 	"title": "Cheesecake!!",
-	"ingredients": "Graham cracker crumbs, eggs, butter, salt, brown sugar, cream cheese, sugar.",
-	"recipe_steps": "Add ingreds, bake at 325 degrees F for 1 hour. Let cool for 20 mins.. then serve!",
+	"ingredients": [
+		"Graham cracker crumbs, eggs, butter, salt, brown sugar, cream cheese, sugar."
+		],
+	"recipe_steps": [
+		"Add ingreds, bake at 325 degrees F for 1 hour. Let cool for 20 mins.. then serve!"
+		],
 	"image": null,
 	"ready_for_feedback": false,
 	"successful_variation": false,
@@ -504,6 +550,18 @@ PATCH /recipes/id/
 	"created_at": "6/22/2022 15:45",
 	"tags": [],
 	"notes": []
+}
+```
+
+If the square brackets are not used, ex. ingredients:
+
+```json
+400 Bad Request
+
+{
+	"ingredients": [
+		"Expected a list of items but got type \"str\"."
+	]
 }
 ```
 

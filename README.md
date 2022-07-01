@@ -1,4 +1,4 @@
-# Bake It Till You Make It
+# Bake It Till You Make It!
 
 All requests, except registration, login and GET calls/searches to /all_recipes/ and /all_notes/ require authentication.
 

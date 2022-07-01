@@ -17,7 +17,6 @@ class User(AbstractUser):
 
 class RecipeVersion(models.Model):
     title = models.CharField(max_length=255)
-    version_number = models.CharField(max_length=3)
     ingredients = ArrayField(models.TextField())
     recipe_steps = ArrayField(models.TextField())
     image = models.ImageField(blank=True, null=True)

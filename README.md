@@ -313,11 +313,13 @@ Required fields: title, ingredients, recipe_steps
 
 Optional field: tags
 
-### Note: ingredients and recipe_steps can be both entered as either a single string or an array of strings - ex. ingredients:
+#### Note: ingredients and recipe_steps can be both entered as either a single string or an array of strings.
+
+ex. single string
 ```json
 "ingredients": "Flour, sugar, eggs, butter, and cocoa",
 ```
-or as an array of strings
+ex. array of strings
 ```json
 "ingredients": ["Flour", "sugar", "eggs", "butter", "and cocoa"],
 ```

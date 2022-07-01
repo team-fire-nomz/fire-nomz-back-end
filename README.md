@@ -329,12 +329,8 @@ POST /recipes/
 
 {
 	"title": "Brownies",
-	"ingredients": [
-		"Flour, sugar, eggs, butter, and cocoa"
-		],
-	"recipe_steps": [
-		"Some butter, stir in the sugar, eggs, flour, and cocoa powder and bake it up."
-		],
+	"ingredients": ["Flour, sugar, eggs, butter, and cocoa"],
+	"recipe_steps": ["Some butter, stir in the sugar, eggs, flour, and cocoa powder and bake it up."],
 }
 ```
 

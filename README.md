@@ -313,7 +313,7 @@ Required fields: title, ingredients, recipe_steps
 
 Optional field: tags
 
-#### Note: ingredients and recipe_steps can be both entered as either a single string or an array of strings AND they both MUST be enclosed within square [] brackets! 
+#### Note: ingredients and recipe_steps can be both entered as either a single string or an array of strings. In either case, the request MUST be enclosed within square [] brackets! (see below examples) 
 
 ex. single string
 ```json

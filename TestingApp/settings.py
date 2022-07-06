@@ -161,8 +161,7 @@ REST_FRAMEWORK = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-# Test for time modification - have to test lines 164-170
-
+# For time modification
 DATETIME_FORMAT='%m/%d/%Y %H:%M'
 
 L10N=False 

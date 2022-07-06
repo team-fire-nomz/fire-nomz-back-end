@@ -33,12 +33,12 @@ class RecipeVersionViewSet(ModelViewSet):
     serializer_class  = RecipeVersionSerializer
     permission_classes = (RecipeIsChefOrReadOnly,)
 
-    # # for taggit - not sure if this is needed here
+    # For Taggit
     def index(request):
-        recipe_versions =RecipeVersion.get.prefetch_related('tags').all()
+        recipe_versions = RecipeVersion.get.prefetch_related('tags').all()
         tags = Tag.objects.all()
         context = {'recipe_versions':recipe_versions, 'tags': tags}
-        return render(request, 'api/index.html', context) # likely need to modify this as this is going to a page F/E isn't doing?!
+        return render(request, 'api/index.html', context)
 
     def get_queryset(self):
         queryset = self.queryset
@@ -60,29 +60,22 @@ class RecipeVersionViewSet(ModelViewSet):
             serializer.save()
 
     def get_serializer_class(self):
-        # Original working
-        # if self.action in ['retrieve']:
-        #     return RecipeVersionSerializer
-        # return super().get_serializer_class()
-
-        # Test separate serializers
         if self.request.method == 'POST':
             return RecipeVersionSerializer
         return RecipeVersionDetailSerializer
 
 
-# for recipe search
 class AllRecipeVersionViewSet(ModelViewSet):
     queryset          = RecipeVersion.objects.all()
     serializer_class  = RecipeVersionSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
-    # for taggit - not sure if this is needed here
+    # For Taggit
     def index(request):
         recipe_versions =RecipeVersion.get.prefetch_related('tags').all()
         tags = Tag.objects.all()
         context = {'recipe_versions':recipe_versions, 'tags': tags}
-        return render(request, 'api/index.html', context) # likely need to modify this as this is going to a page F/E isn't doing?!
+        return render(request, 'api/index.html', context)
 
     def get_queryset(self):
         search_term = self.request.query_params.get("search")
@@ -130,7 +123,6 @@ class NoteViewSet(ModelViewSet):
             serializer.save()
 
     def get_serializer_class(self):
-        # Test separate serializers
         if self.request.method == 'POST':
             return NoteSerializer
         return NoteDetailSerializer
@@ -195,7 +187,7 @@ class TasterFeedbackView(ModelViewSet):
             instance.delete()
 
     def perform_update(self,serializer):
-        # if self.request.user == serializer.instance.tester:
+        if self.request.user == serializer.instance.tester:
             serializer.save()
 
 
@@ -224,7 +216,7 @@ class TasterFeedbackDetailView(ModelViewSet):
             instance.delete()
 
     def perform_update(self,serializer):
-        # if self.request.user == serializer.instance.tester:
+        if self.request.user == serializer.instance.tester:
             serializer.save()
 
 

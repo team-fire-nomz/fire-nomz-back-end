@@ -41,14 +41,13 @@ class RecipeVersionSerializer (serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
     notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
     ingredients = serializers.ListField(child=serializers.CharField())
-    recipe_steps =serializers.ListField(child=serializers.CharField()) # test tomorrow!!
+    recipe_steps =serializers.ListField(child=serializers.CharField())
     
     class Meta: 
         model  = RecipeVersion
         fields = [
             'id',
             'title',
-            # 'version_number', # not implemented currently
             'ingredients',
             'recipe_steps',
             'image',
@@ -59,7 +58,7 @@ class RecipeVersionSerializer (serializers.ModelSerializer):
             'notes',
             ]
 
-# have to work on ?
+
 class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
     notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
@@ -72,7 +71,6 @@ class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerialize
         fields = [
             'id',
             'title',
-            # 'version_number', # not implemented currently
             'ingredients',
             'recipe_steps',
             'image',
@@ -85,7 +83,7 @@ class RecipeVersionDetailSerializer(TaggitSerializer, serializers.ModelSerialize
             ]
 
 
-#for taggit
+# For Taggit
 class RecipeListSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
 
@@ -100,7 +98,7 @@ class RecipeListSerializer(TaggitSerializer, serializers.ModelSerializer):
 
 
 class NoteSerializer(serializers.ModelSerializer):
-    note_by        = serializers.SlugRelatedField(read_only=True, slug_field="username")
+    note_by = serializers.SlugRelatedField(read_only=True, slug_field="username")
     
     class Meta:
         model = Note
@@ -113,7 +111,7 @@ class NoteSerializer(serializers.ModelSerializer):
 
 
 class NoteDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
-    note_by        = serializers.SlugRelatedField(read_only=True, slug_field="username")
+    note_by = serializers.SlugRelatedField(read_only=True, slug_field="username")
     tags = TagListSerializerField()
 
     class Meta:
@@ -129,14 +127,6 @@ class NoteDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
 
 
 class TasterFeedbackSerializer(TaggitSerializer, serializers.ModelSerializer):
-    # tester = serializers.SlugRelatedField(read_only=True, slug_field="username")
-
-    # rating = serializers.MultipleChoiceField(choices = TasterFeedback.RADIO)
-    # saltiness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
-    # sweetness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
-    # portion = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
-    # texture = serializers.MultipleChoiceField(choices = TasterFeedback.CHOICE)
-
 
     class Meta:
         model = TasterFeedback
@@ -148,20 +138,12 @@ class TasterFeedbackSerializer(TaggitSerializer, serializers.ModelSerializer):
             'portion',
             'texture',
             'additional_comment',
-            # 'tester',
             'created_at',
         ]
 
 
 class TasterFeedbackDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
     tester = serializers.SlugRelatedField(read_only=True, slug_field="username")
-
-    # rating = serializers.MultipleChoiceField(choices = TasterFeedback.RADIO)
-    # saltiness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
-    # sweetness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
-    # portion = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
-    # texture = serializers.MultipleChoiceField(choices = TasterFeedback.CHOICE)
-
 
     class Meta:
         model = TasterFeedback

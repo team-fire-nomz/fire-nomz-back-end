@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "*"
+django = ">=4.0.6"
 django-environ = "*"
 djangorestframework = "*"
 django-markdown = "*"
@@ -21,6 +21,7 @@ pillow = "*"
 django-taggit = "*"
 
 [dev-packages]
+django = ">=4.0.6"
 
 [requires]
 python_version = "3.10"

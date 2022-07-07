@@ -2,10 +2,10 @@ from django.contrib import admin
 from .models import User, Note, RecipeVersion, TasterFeedback
 
 admin.site.register(User)
-# admin.site.register(RecipeVersion)
 admin.site.register(Note)
 admin.site.register(TasterFeedback)
 
+# For Taggit admin view
 @admin.register(RecipeVersion)
 class MyModelAdmin(admin.ModelAdmin):
     list_display = ['title', 'chef', 'tag_list']

@@ -691,7 +691,7 @@ If another logged in user attempts to add a tag to an existing recipe that is no
 ```
 
 
-## Mark a specific recipe as a ready for feedback
+## Mark a specific recipe as ready for feedback
 
 Requirement: user must be logged in. 
 

@@ -1,6 +1,18 @@
 # Bake It Till You Make It!
 
-All requests, except registration, login and GET calls/searches to /all_recipes/ and /all_notes/ require authentication.
+This application allows for the creation of recipes and notes for novice bakers. 
+Anyone can view the content, however, in order to create/track one's recipes and notes, you must register/create an account first.
+
+## Features
+* Bakers can search existing recipes or notes. 
+	* They can open either a view of all recipes/notes in general or just their own recipes/notes.
+* Bakers have the ability to tag recipes and notes.
+* Bakers can mark a specific recipe as a successful variation.
+* Bakers can mark a specific recipe as ready for feedback
+* Anonymous / guest users have the ability to leave feedback for a specific recipe.
+
+
+### All requests, except registration, login and searches to all_recipes and all_notes require authentication.
 
 
 ## Base URL:
@@ -9,28 +21,30 @@ All endpoints begin with `https://bake-it-till-you-make-it.herokuapp.com/api/`
 
 NOTE: API Root is /api/
 
-| Method | Endpoint                                                           | Description                                 |
-| ------ | ------------------------------------------------------------------ | ------------------------------------------- |
-| POST   | [/users/](#create-a-new-user)                                      | Create a new user                           |
-| POST   | [/auth/token/login/](#login-user)                                  | Login user (remove /api from url)           |
-| GET    | [/users/me/](#users-info)                                          | User's info                                 |
-| POST   | [/auth/token/logout/](#logout-user)                                | Logout user (remove /api from url)          |
-| GET    | [/recipes/](#list-of-recipes-logged-in-user)                       | List all logged in user created recipes     |
-| GET    | [/all_recipes/](#list-of-all-recipes)                              | List all recipes for all users              |
-| GET    | [/all_recipes?search=<search_term>](#search-recipes)               | Search recipes (limited to one search term) |
-| POST   | [/recipes/](#create-a-new-recipe-for-user)                         | Create a new recipe                         |
-| GET    | [/recipes/{id}/](#details-for-a-specific-recipe)                   | Details for a specific recipe               |
-| PUT    | [/recipes/{id}/](#update-an-existing-recipe)                       | Update an existing recipe                   |
-| PATCH  | [/recipes/{id}/](#update-part-of-an-existing-recipe)               | Update part of an existing recipe           |
-| PATCH  | [/recipes/{id}/](#add-a-tag-to-an-existing-recipe)                 | Add a tag to an existing recipe             |
-| DELETE | [/recipes/{id}/](#delete-recipe)                                   | Delete an existing recipe                   |
-| POST   | [/recipes/{id}/notes/](#create-a-new-note-for-a-recipe)            | Create a note for a recipe                  |
-| GET    | [/recipes/{id}/notes/](#list-of-notes-for-a-recipe)                | List of notes for a recipe                  |
-| GET    | [/all_notes?search=<search_term>](#search-notes)                   | Search notes (limited to one search term)   |
-| PUT    | [/recipes/{id}/notes/{id}/](#update-an-existing-note-for-a-recipe) | Update a specific note for a recipe         |
-| PATCH  | [/recipes/{id}/notes/{id}/](#update-part-of-a-specific-note)       | Update an existing note                     |
-| DELETE | [/recipes/{id}/notes/{id}/](#delete-a-specific-note-of-a-recipe)   | Delete part of an existing note             |
-| POST   | [/recipes/{id}/feedback/](#give-feedback-for-a-new-recipe)         | Give feedback for a new recipe              |
+| Method | Endpoint                                                           | Description                                      |
+| ------ | ------------------------------------------------------------------ | ------------------------------------------------ |
+| POST   | [/users/](#create-a-new-user)                                      | Create a new user                                |
+| POST   | [/auth/token/login/](#login-user)                                  | Login user (remove /api from url)                |
+| GET    | [/users/me/](#users-info)                                          | User's info                                      |
+| POST   | [/auth/token/logout/](#logout-user)                                | Logout user (remove /api from url)               |
+| GET    | [/recipes/](#list-of-recipes-logged-in-user)                       | List all logged in user created recipes          |
+| GET    | [/all_recipes/](#list-of-all-recipes)                              | List all recipes for all users                   |
+| GET    | [/all_recipes?search=<search_term>](#search-recipes)               | Search recipes (limited to one search term)      |
+| POST   | [/recipes/](#create-a-new-recipe-for-user)                         | Create a new recipe                              |
+| GET    | [/recipes/{id}/](#details-for-a-specific-recipe)                   | Details for a specific recipe                    |
+| PUT    | [/recipes/{id}/](#update-an-existing-recipe)                       | Update an existing recipe                        |
+| PATCH  | [/recipes/{id}/](#update-part-of-an-existing-recipe)               | Update part of an existing recipe                |
+| PATCH  | [/recipes/{id}/](#add-a-tag-to-an-existing-recipe)                 | Add a tag to an existing recipe                  |
+| PATCH  | [/recipes/{id}/](#mark-a-specific-recipe-as-a-successful-variation)| Mark a specific recipe as a successful variation |
+| PATCH  | [/recipes/{id}/](#mark-a-specific-recipe-as-ready-for-feedback)    | Mark a specific recipe as a ready for feedback   |
+| DELETE | [/recipes/{id}/](#delete-recipe)                                   | Delete an existing recipe                        |
+| POST   | [/recipes/{id}/notes/](#create-a-new-note-for-a-recipe)            | Create a note for a recipe                       |
+| GET    | [/recipes/{id}/notes/](#list-of-notes-for-a-recipe)                | List of notes for a recipe                       |
+| GET    | [/all_notes?search=<search_term>](#search-notes)                   | Search notes (limited to one search term)        |
+| PUT    | [/recipes/{id}/notes/{id}/](#update-an-existing-note-for-a-recipe) | Update a specific note for a recipe              |
+| PATCH  | [/recipes/{id}/notes/{id}/](#update-part-of-a-specific-note)       | Update an existing note                          |
+| DELETE | [/recipes/{id}/notes/{id}/](#delete-a-specific-note-of-a-recipe)   | Delete part of an existing note                  |
+| POST   | [/recipes/{id}/feedback/](#give-feedback-for-a-new-recipe)         | Give feedback for a new recipe                   |
 
 
 ## Create a new user
@@ -582,7 +596,7 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: tags 
+Required field: tags 
 
 Note: if adding a new tag, you MUST include the other tag(s) in the string (if any), otherwise only the newest tag will be added. 
 
@@ -607,6 +621,105 @@ PATCH /recipes/id/
 	"image": null,
 	"ready_for_feedback": false,
 	"successful_variation": false,
+	"chef": "Eric",
+	"created_at": "6/22/2022 15:45",
+	"tags": [
+		"PhillyCreamCheese", 
+		"cheesecake yumz", 
+		"ChefEric"
+		],
+	"notes": []
+}
+```
+
+If another logged in user attempts to add a tag to an existing recipe that is not theirs:
+```json
+404 Not Found
+
+{
+	"detail": "Editing posts is restricted to the author only."
+}
+```
+
+## Mark a specific recipe as a successful variation
+
+Requirement: user must be logged in. 
+
+### Request
+
+Required field: successful_variation 
+
+```json
+PATCH /recipes/id/
+
+{
+	"successful_variation": true
+}
+```
+
+### Response
+
+```json
+200 OK
+
+{
+	"id": 2,
+	"title": "Cheesecake!!",
+	"ingredients": "Graham cracker crumbs, eggs, butter, salt, brown sugar, cream cheese, sugar.",
+	"recipe_steps": "Add ingreds, bake at 325 degrees F for 1 hour. Let cool for 20 mins.. then serve!",
+	"image": null,
+	"ready_for_feedback": false,
+	"successful_variation": true,
+	"chef": "Eric",
+	"created_at": "6/22/2022 15:45",
+	"tags": [
+		"PhillyCreamCheese", 
+		"cheesecake yumz", 
+		"ChefEric"
+		],
+	"notes": []
+}
+```
+
+If another logged in user attempts to add a tag to an existing recipe that is not theirs:
+```json
+404 Not Found
+
+{
+	"detail": "Editing posts is restricted to the author only."
+}
+```
+
+
+## Mark a specific recipe as a ready for feedback
+
+Requirement: user must be logged in. 
+
+### Request
+
+Required field: ready_for_feedback 
+
+```json
+PATCH /recipes/id/
+
+{
+	"ready_for_feedback": true,
+}
+```
+
+### Response
+
+```json
+200 OK
+
+{
+	"id": 2,
+	"title": "Cheesecake!!",
+	"ingredients": "Graham cracker crumbs, eggs, butter, salt, brown sugar, cream cheese, sugar.",
+	"recipe_steps": "Add ingreds, bake at 325 degrees F for 1 hour. Let cool for 20 mins.. then serve!",
+	"image": null,
+	"ready_for_feedback": true,
+	"successful_variation": true,
 	"chef": "Eric",
 	"created_at": "6/22/2022 15:45",
 	"tags": [
